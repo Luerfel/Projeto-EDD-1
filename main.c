@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h> 
 #include <locale.h> //necessário para usar setlocale
+
+// structs
 struct Data{
     int dia;
     int mes;
@@ -27,16 +29,20 @@ typedef struct Fila{
     Lista *fim;
 }fila;
 
-// funçoes 
+// Prototipos das funções
+
 fila* criaFila();
 void insereFila(fila*f,Tarefa tarefa);
 int menu(); 
+void limparBuffer();
+
 
 int main() {
     setlocale(LC_ALL, "Portuguese");
     Lista* head = NULL; // Inicializa a lista vazia
     int opcao;
-    opcao=menu();
+    opcao=menu(); 
+    printf("%d ",opcao);
     switch (opcao)
     {
     case 1:
@@ -48,17 +54,20 @@ int main() {
     break;
 
     case 3:
+
     break;
     case 4:
+
     break;
     case 5:
+
     break;
     case 6:
+
     break;
     case 7:
+
     break;
-    default:
-        break;
     }
     
     
@@ -75,14 +84,18 @@ int main() {
 
     return 0;
 }
+// cria a fila
 fila* criaFila(){
     fila*f=(fila*)malloc(sizeof(fila));
     f->ini=f->fim= NULL;
 }
+
+
+// Função para imprimir o menu e selecioanr a opção
 int menu(){
   int opcao;
 
-
+    
     while(1){
     printf("   /\\"); 
     printf("\n  /  \\");
@@ -96,13 +109,21 @@ int menu(){
     printf("6 - Lista de Tarefas Concluídas com e sem Atrasos\n");
     printf("7 - Sair do Programa\n\n"); 
    
-
     printf("Escolha uma opção: ");
     scanf("%d", &opcao);
+    system("clear"); //limpa a tela
+
+
     if(opcao >= 1 && opcao <= 8) {
-printf("Numero valido!\n");
+        return opcao;
 } else {
-printf("NUMERO INVALIDO!\nAperte qualquer tecla para continuar\n");
+        printf("OPÇÃO INVALIDA!! Aperta ENTER para continuar \n");
+        setbuf(stdin,NULL); //limpa o buffer do teclado para forçar a pausa em getchar
+        getchar();
+        system("clear"); 
+   
+
+
 
 
 }
@@ -111,4 +132,9 @@ printf("NUMERO INVALIDO!\nAperte qualquer tecla para continuar\n");
 
 
     }
+}
+// Essa função vamos usar para a limpeza de Buffer do nosso programa, ele vai fazer o serviço de ficar pegando caracter do buffer
+void limparBuffer(){
+    char c;
+    while((c = getchar()) != 'n' && c!= EOF); 
 }
