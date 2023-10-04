@@ -35,18 +35,21 @@ Fila* criaFila();
 void insereFila(No*fim,Tarefa tarefa);
 int menu(); 
 void limparBuffer();
+
 void inserirFila(Fila *fila,Tarefa tarefa);
+
+Tarefa criarTarefa();
 
 
 int main() {
     setlocale(LC_ALL, "Portuguese");
-    No* head = NULL; // Inicializa a lista vazia
     int opcao;
+    No* head = NULL; // Inicializa a lista vazia
     opcao=menu(); 
     switch (opcao)
     {
     case 1:
-        
+        criarTarefa();
         break;
     case 2:
 
@@ -84,6 +87,27 @@ int main() {
 
     return 0;
 }
+Tarefa criarTarefa(){
+    Tarefa nova;
+    printf("Digite o codigo da tarefa a ser criada\n");
+    scanf("%d",&nova.codigo);
+
+    printf("Digite o nome da tarefa ate no maximo 30 caracteres!\n");
+    getchar();
+    fgets(nova.tarefa, 30, stdin);
+
+    printf("Digite o nome do projeto\n");
+    scanf("%d",&nova.codigo);
+
+    printf("Digite a data de inicio da tarefa\n");
+    scanf("%d",&nova.codigo);
+
+
+    printf("Digite o prazo para a entrega da tarefa\n");
+    scanf("%d",&nova.codigo);
+
+}
+
 // cria a fila
 Fila* criaFila(){
     Fila*f=(Fila*)malloc(sizeof(Fila));
