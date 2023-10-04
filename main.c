@@ -44,12 +44,14 @@ Tarefa criarTarefa();
 int main() {
     setlocale(LC_ALL, "Portuguese");
     int opcao;
+    Tarefa tarefa;
     No* head = NULL; // Inicializa a lista vazia
+    Fila *filaTarefas = criaFila();
     opcao=menu(); 
     switch (opcao)
     {
     case 1:
-        criarTarefa();
+        tarefa = criarTarefa();
         break;
     case 2:
 
@@ -89,22 +91,33 @@ int main() {
 }
 Tarefa criarTarefa(){
     Tarefa nova;
-    printf("Digite o codigo da tarefa a ser criada\n");
+    printf("Digite o codigo da tarefa a ser criada :\n");
     scanf("%d",&nova.codigo);
+    printf("%d",nova.codigo);
 
-    printf("Digite o nome da tarefa ate no maximo 30 caracteres!\n");
+    printf("Digite o nome da tarefa ate no maximo 30 caracteres : \n");
     getchar();
     fgets(nova.tarefa, 30, stdin);
-
-    printf("Digite o nome do projeto\n");
-    scanf("%d",&nova.codigo);
-
-    printf("Digite a data de inicio da tarefa\n");
-    scanf("%d",&nova.codigo);
+    printf("%s",nova.tarefa);
 
 
-    printf("Digite o prazo para a entrega da tarefa\n");
-    scanf("%d",&nova.codigo);
+    printf("Digite o nome do projeto ate no maximo 30 caracteres : \n");
+    getchar();
+    fgets(nova.projeto, 30, stdin);
+    printf("%s",nova.projeto);
+
+
+    printf("Digite a data de inicio da tarefa nesse formato dd/mm/aaaa :\n ");
+    scanf("%d/%d/%d", &nova.dataInicio.dia, &nova.dataInicio.mes, &nova.dataInicio.ano);
+    printf("Data de inicio: %d/%d/%d\n", nova.dataInicio.dia, nova.dataInicio.mes, nova.dataInicio.ano);
+
+   
+
+    printf("\nDigite o prazo para a entrega da tarefa : \n");
+    scanf("%d/%d/%d", &nova.dataTermino.dia, &nova.dataTermino.mes, &nova.dataTermino.ano);
+
+
+ return nova;
 
 }
 
