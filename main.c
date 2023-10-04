@@ -19,30 +19,30 @@ int status;
 }; typedef struct Tarefa Tarefa;
 
 
-struct no {
+struct No {
     Tarefa info;
-    struct no *prox;
-};typedef struct no Lista;
+    struct No *prox;
+};typedef struct No No;
 
 typedef struct Fila{
-    Lista *ini;
-    Lista *fim;
-}fila;
+    No *ini;
+    No *fim;
+}Fila;
 
 // Prototipos das funções
 
-fila* criaFila();
-void insereFila(fila*f,Tarefa tarefa);
+Fila* criaFila();
+void insereFila(No*fim,Tarefa tarefa);
 int menu(); 
 void limparBuffer();
+void inserirFila(Fila *fila,Tarefa tarefa);
 
 
 int main() {
     setlocale(LC_ALL, "Portuguese");
-    Lista* head = NULL; // Inicializa a lista vazia
+    No* head = NULL; // Inicializa a lista vazia
     int opcao;
     opcao=menu(); 
-    printf("%d ",opcao);
     switch (opcao)
     {
     case 1:
@@ -85,10 +85,40 @@ int main() {
     return 0;
 }
 // cria a fila
-fila* criaFila(){
-    fila*f=(fila*)malloc(sizeof(fila));
+Fila* criaFila(){
+    Fila*f=(Fila*)malloc(sizeof(Fila));
     f->ini=f->fim= NULL;
 }
+
+// função que insere um elemento no fim da lista
+No* insFim(No* fim,Tarefa tarefa){
+    No *aux = fim;
+    No *novo = malloc(sizeof(No));
+    novo->info = tarefa;
+    novo->prox = NULL; // como é uma fila o novo elemento adicionado aponta para NULL
+    if(fim == NULL) { // Verifica se a lista esta vazia
+    fim ->prox = novo;
+    return novo;
+    }
+    // faz o ultimo elemento aponta para esse novo elemento;
+    while (aux->prox != NULL){
+        aux = aux->prox;
+    }
+    aux->prox = novo;
+    
+    return novo;
+
+
+
+}
+void inserirFila(Fila *fila, Tarefa tarefa){
+    fila->fim = insFim(fila->fim,tarefa);
+    if (fila->ini == NULL){                      // verifica se a fila esta vazia
+        fila->ini = fila->fim;
+    }
+
+}
+
 
 
 // Função para imprimir o menu e selecioanr a opção
