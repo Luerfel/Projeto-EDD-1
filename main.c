@@ -38,6 +38,7 @@ void insereFila(No*fim,Tarefa tarefa);
 int menu(); 
 void limparBuffer();
 void inserirFila(Fila *fila,Tarefa tarefa);
+void mensagemFinal();
 Tarefa criarTarefa();
 int compararData(Data dataInicio,Data dataTermino);
 
@@ -46,15 +47,22 @@ int compararData(Data dataInicio,Data dataTermino);
 int main() {
     setlocale(LC_ALL, "Portuguese");
     int opcao; // variavel auxiliar do menu
-    char resp; // variavel auxiliar
+    char resp='s'; // variavel auxiliar
     Tarefa tarefa;
     Fila *filaTarefas = criaFila();
+    do{
     opcao=menu(); 
+
     switch (opcao)
     {
     case 1:
         tarefa = criarTarefa();
+        if(tarefa.status==3){
+            system("clear");
+            goto fim;
+        }
         inserirFila(filaTarefas,tarefa);
+
         break;
     case 2:
 
@@ -74,11 +82,13 @@ int main() {
 
     break;
     case 7:
+        mensagemFinal();
 
+    return 0;
     break;
     }
-    
-    
+    fim:
+    }while(resp=='s');
     
     
 
@@ -125,14 +135,15 @@ Tarefa criarTarefa(){
     system("clear"); //limpa a tela
     nova.status = compararData(nova.dataInicio,nova.dataTermino);
 
-    printf("Codigo : %d\nNome : %sProjeto : %sData de inicio: %d/%d/%d\nPrazo de entrega : %d/%d/%d\nStatus : %d\n",nova.codigo,nova.tarefa,nova.projeto,nova.dataInicio.dia
+    printf("Codigo : %d\nNome : %sProjeto : %sData de inicio: %d/%d/%d\nPrazo de entrega : %d/%d/%d\nStatus : %d\n\n",nova.codigo,nova.tarefa,nova.projeto,nova.dataInicio.dia
     ,nova.dataInicio.mes,nova.dataInicio.ano,nova.dataTermino.dia,nova.dataTermino.mes,nova.dataTermino.ano,nova.status);
     printf("Antes de finalizar, certifique-se de que todos os campos estão preenchidos como deseja.\n");
     
-    printf("Deseja confirmar a criação dessa tarefa? digite 's' para confirmar e 'n' para descartar");
+    printf("Para SALVAR a tarefa, digite 'S'. Para DESCARTAR, digite 'N'\n");
     do{
+        while(getchar()!='\n'); // limpeza do buffer
         resp = tolower(getchar());
-        while(getchar()!='\n');
+        
         
         if(resp != 's' && resp != 'n'){
             printf("RESPOSTA INVALIDA! Lembre-se de digitar s para confirmar, n para descartar a tarefa!\n ");
@@ -140,11 +151,20 @@ Tarefa criarTarefa(){
             
             continue;
             }
+            else if (resp =='n'){
+                printf("Vamos voltar ao menu principal. Pressione Enter para prosseguir\n");
+                while(getchar()!='\n');
+                nova.status = 3;
+                getchar();
+                return nova;
+            }
         }
          while(resp!= 's');
+
     
-
-
+    system("clear");
+    printf("Parabéns, a tarefa foi adicionada com sucesso! Pressione Enter para continuar.\n");
+    getchar();
  return nova;
 
 }
@@ -200,7 +220,7 @@ int menu(){
     scanf("%d", &opcao);
     system("clear"); //limpa a tela
 
-
+  // validação de entrada
     if(opcao >= 1 && opcao <= 8) {
         return opcao;
 } else {
@@ -243,4 +263,14 @@ int compararData(Data dataInicio, Data dataTermino){
      return -1;
     
 
+}
+
+void mensagemFinal(){
+      system("clear");
+       printf("   /\\"); 
+    printf("\n  /  \\");
+    printf("\n /____\\");
+    printf("  Sistema de gerenciamento Triangulus\n");
+    printf("\nFim do programa!\n");
+    printf("Obrigado por usar nosso software. Ficamos felizes em poder ajudar. Até a próxima vez!\n");
 }
