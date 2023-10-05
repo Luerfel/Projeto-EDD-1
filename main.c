@@ -93,28 +93,33 @@ Tarefa criarTarefa(){
     Tarefa nova;
     printf("Digite o codigo da tarefa a ser criada :\n");
     scanf("%d",&nova.codigo);
-    printf("%d",nova.codigo);
+    system("clear"); //limpa a tela
 
-    printf("Digite o nome da tarefa ate no maximo 30 caracteres : \n");
+
+    printf("Digite o nome da Tarefa use no maximo 30 caracteres : \n");
     getchar();
     fgets(nova.tarefa, 30, stdin);
-    printf("%s",nova.tarefa);
+    system("clear"); //limpa a tela
 
 
-    printf("Digite o nome do projeto ate no maximo 30 caracteres : \n");
+
+    printf("Digite o nome do Projeto use no maximo 30 caracteres : \n");
     getchar();
     fgets(nova.projeto, 30, stdin);
-    printf("%s",nova.projeto);
+    system("clear"); //limpa a tela
 
 
-    printf("Digite a data de inicio da tarefa nesse formato dd/mm/aaaa :\n ");
+
+    printf("Digite a data de inicio da Tarefa neste formato dd/mm/aaaa :\n ");
     scanf("%d/%d/%d", &nova.dataInicio.dia, &nova.dataInicio.mes, &nova.dataInicio.ano);
-    printf("Data de inicio: %d/%d/%d\n", nova.dataInicio.dia, nova.dataInicio.mes, nova.dataInicio.ano);
+    system("clear"); //limpa a tela
+
 
    
 
-    printf("\nDigite o prazo para a entrega da tarefa : \n");
+    printf("Digite o prazo para a entrega da Tarefa neste formato dd/mm/aaaa: \n");
     scanf("%d/%d/%d", &nova.dataTermino.dia, &nova.dataTermino.mes, &nova.dataTermino.ano);
+    system("clear"); //limpa a tela
 
 
  return nova;
