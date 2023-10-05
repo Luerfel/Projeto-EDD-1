@@ -45,13 +45,14 @@ int main() {
     setlocale(LC_ALL, "Portuguese");
     int opcao;
     Tarefa tarefa;
-    No* head = NULL; // Inicializa a lista vazia
     Fila *filaTarefas = criaFila();
     opcao=menu(); 
     switch (opcao)
     {
     case 1:
         tarefa = criarTarefa();
+        inserirFila(filaTarefas,tarefa);
+        printf("Codigo : %d\nNome : %s\nProjeto : %s\nData de inicio: %d/%d/%d\nPrazo de entrega : %d/%d/%d\n",tarefa.codigo,tarefa.tarefa,tarefa.projeto,tarefa.dataInicio.dia,tarefa.dataInicio.mes,tarefa.dataInicio.ano,tarefa.dataTermino.dia,tarefa.dataTermino.mes,tarefa.dataTermino.ano);
         break;
     case 2:
 
@@ -104,7 +105,6 @@ Tarefa criarTarefa(){
 
 
     printf("Digite o nome do Projeto use no maximo 30 caracteres : \n");
-    getchar();
     fgets(nova.projeto, 30, stdin);
     system("clear"); //limpa a tela
 
@@ -134,11 +134,11 @@ Fila* criaFila(){
 
 // função que insere um elemento no fim da lista
 No* insFim(No* fim,Tarefa tarefa){
-    No *novo = malloc(sizeof(No));
-    novo->info = tarefa;
+    No *novo = malloc(sizeof(No)); // alocação dinamica
+    novo->info = tarefa;   // o novo nó recebe a tarefa
     novo->prox = NULL; // como é uma fila o novo elemento adicionado aponta para NULL
     if(fim != NULL) { // Verifica se a lista esta vazia
-        fim ->prox = novo;
+        fim ->prox = novo;  // se a lista nao estiver vazia o nó anterior vai apontar para esse novo nó 
     }
     return novo;
 
@@ -154,8 +154,6 @@ void inserirFila(Fila *fila, Tarefa tarefa){
     }
 
 }
-
-
 
 // Função para imprimir o menu e selecioanr a opção
 int menu(){
