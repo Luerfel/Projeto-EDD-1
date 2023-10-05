@@ -134,21 +134,15 @@ Fila* criaFila(){
 
 // função que insere um elemento no fim da lista
 No* insFim(No* fim,Tarefa tarefa){
-    No *aux = fim;
     No *novo = malloc(sizeof(No));
     novo->info = tarefa;
     novo->prox = NULL; // como é uma fila o novo elemento adicionado aponta para NULL
-    if(fim == NULL) { // Verifica se a lista esta vazia
-    fim ->prox = novo;
-    return novo;
+    if(fim != NULL) { // Verifica se a lista esta vazia
+        fim ->prox = novo;
     }
-    // faz o ultimo elemento aponta para esse novo elemento;
-    while (aux->prox != NULL){
-        aux = aux->prox;
-    }
-    aux->prox = novo;
-    
     return novo;
+
+
 
 
 
