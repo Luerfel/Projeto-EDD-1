@@ -35,10 +35,10 @@ Fila* criaFila();
 void insereFila(No*fim,Tarefa tarefa);
 int menu(); 
 void limparBuffer();
-
 void inserirFila(Fila *fila,Tarefa tarefa);
-
 Tarefa criarTarefa();
+int compararData(Data dataInicio,Data dataTermino);
+
 
 
 int main() {
@@ -52,7 +52,7 @@ int main() {
     case 1:
         tarefa = criarTarefa();
         inserirFila(filaTarefas,tarefa);
-        printf("Codigo : %d\nNome : %s\nProjeto : %s\nData de inicio: %d/%d/%d\nPrazo de entrega : %d/%d/%d\n",tarefa.codigo,tarefa.tarefa,tarefa.projeto,tarefa.dataInicio.dia,tarefa.dataInicio.mes,tarefa.dataInicio.ano,tarefa.dataTermino.dia,tarefa.dataTermino.mes,tarefa.dataTermino.ano);
+        printf("Codigo : %d\nNome : %s\nProjeto : %s\nData de inicio: %d/%d/%d\nPrazo de entrega : %d/%d/%d\nStatus : %d",tarefa.codigo,tarefa.tarefa,tarefa.projeto,tarefa.dataInicio.dia,tarefa.dataInicio.mes,tarefa.dataInicio.ano,tarefa.dataTermino.dia,tarefa.dataTermino.mes,tarefa.dataTermino.ano,tarefa.status);
         break;
     case 2:
 
@@ -120,6 +120,8 @@ Tarefa criarTarefa(){
     printf("Digite o prazo para a entrega da Tarefa neste formato dd/mm/aaaa: \n");
     scanf("%d/%d/%d", &nova.dataTermino.dia, &nova.dataTermino.mes, &nova.dataTermino.ano);
     system("clear"); //limpa a tela
+    nova.status = compararData(nova.dataInicio,nova.dataTermino);
+    
 
 
  return nova;
@@ -201,4 +203,23 @@ int menu(){
 void limparBuffer(){
     char c;
     while((c = getchar()) != 'n' && c!= EOF); 
+}
+// função que define os status automaticamente 
+int compararData(Data dataInicio, Data dataTermino){
+    if (dataInicio.ano>dataTermino.ano){
+        return 1;
+    }
+    else if (dataInicio.ano!=dataTermino.ano){
+        return -1;
+    }
+    else if (dataInicio.mes>dataTermino.mes){
+        return 1;
+    }
+    else if(dataInicio.mes == dataTermino.mes && dataInicio.dia>dataTermino.dia){
+        return 1;
+    }
+    else
+     return -1;
+    
+
 }
