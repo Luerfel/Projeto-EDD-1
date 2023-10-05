@@ -52,7 +52,7 @@ int main() {
     case 1:
         tarefa = criarTarefa();
         inserirFila(filaTarefas,tarefa);
-        printf("Codigo : %d\nNome : %s\nProjeto : %s\nData de inicio: %d/%d/%d\nPrazo de entrega : %d/%d/%d\nStatus : %d",tarefa.codigo,tarefa.tarefa,tarefa.projeto,tarefa.dataInicio.dia,tarefa.dataInicio.mes,tarefa.dataInicio.ano,tarefa.dataTermino.dia,tarefa.dataTermino.mes,tarefa.dataTermino.ano,tarefa.status);
+        printf("Codigo : %d\nNome : %sProjeto : %sData de inicio: %d/%d/%d\nPrazo de entrega : %d/%d/%d\nStatus : %d",tarefa.codigo,tarefa.tarefa,tarefa.projeto,tarefa.dataInicio.dia,tarefa.dataInicio.mes,tarefa.dataInicio.ano,tarefa.dataTermino.dia,tarefa.dataTermino.mes,tarefa.dataTermino.ano,tarefa.status);
         break;
     case 2:
 
