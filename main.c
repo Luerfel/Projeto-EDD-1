@@ -41,6 +41,7 @@ void inserirFila(Fila *fila,Tarefa tarefa);
 void mensagemFinal();
 Tarefa criarTarefa();
 int compararData(Data dataInicio,Data dataTermino);
+void editarTarefa(Fila * inicio, int codigo);
 
 
 
@@ -273,4 +274,13 @@ void mensagemFinal(){
     printf("  Sistema de gerenciamento Triangulus\n");
     printf("\nFim do programa!\n");
     printf("Obrigado por usar nosso software. Ficamos felizes em poder ajudar. Até a próxima vez!\n");
+}
+
+void editarTarefa(Fila * fila, int codigo){
+  No *aux = fila->ini;
+  while (aux->info.codigo!= codigo)
+  {
+    
+  }
+  
 }
