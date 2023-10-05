@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h> 
 #include <locale.h> //necessário para usar setlocale
+#include <ctype.h>
+#include <unistd.h>
 
 // structs
 struct Data{
@@ -43,7 +45,8 @@ int compararData(Data dataInicio,Data dataTermino);
 
 int main() {
     setlocale(LC_ALL, "Portuguese");
-    int opcao;
+    int opcao; // variavel auxiliar do menu
+    char resp; // variavel auxiliar
     Tarefa tarefa;
     Fila *filaTarefas = criaFila();
     opcao=menu(); 
@@ -52,7 +55,6 @@ int main() {
     case 1:
         tarefa = criarTarefa();
         inserirFila(filaTarefas,tarefa);
-        printf("Codigo : %d\nNome : %sProjeto : %sData de inicio: %d/%d/%d\nPrazo de entrega : %d/%d/%d\nStatus : %d",tarefa.codigo,tarefa.tarefa,tarefa.projeto,tarefa.dataInicio.dia,tarefa.dataInicio.mes,tarefa.dataInicio.ano,tarefa.dataTermino.dia,tarefa.dataTermino.mes,tarefa.dataTermino.ano,tarefa.status);
         break;
     case 2:
 
@@ -92,6 +94,7 @@ int main() {
 }
 Tarefa criarTarefa(){
     Tarefa nova;
+    char resp;
     printf("Digite o codigo da tarefa a ser criada :\n");
     scanf("%d",&nova.codigo);
     system("clear"); //limpa a tela
@@ -121,6 +124,24 @@ Tarefa criarTarefa(){
     scanf("%d/%d/%d", &nova.dataTermino.dia, &nova.dataTermino.mes, &nova.dataTermino.ano);
     system("clear"); //limpa a tela
     nova.status = compararData(nova.dataInicio,nova.dataTermino);
+
+    printf("Codigo : %d\nNome : %sProjeto : %sData de inicio: %d/%d/%d\nPrazo de entrega : %d/%d/%d\nStatus : %d\n",nova.codigo,nova.tarefa,nova.projeto,nova.dataInicio.dia
+    ,nova.dataInicio.mes,nova.dataInicio.ano,nova.dataTermino.dia,nova.dataTermino.mes,nova.dataTermino.ano,nova.status);
+    printf("Antes de finalizar, certifique-se de que todos os campos estão preenchidos como deseja.\n");
+    
+    printf("Deseja confirmar a criação dessa tarefa? digite 's' para confirmar e 'n' para descartar");
+    do{
+        resp = tolower(getchar());
+        while(getchar()!='\n');
+        
+        if(resp != 's' && resp != 'n'){
+            printf("RESPOSTA INVALIDA! Lembre-se de digitar s para confirmar, n para descartar a tarefa!\n ");
+            
+            
+            continue;
+            }
+        }
+         while(resp!= 's');
     
 
 
