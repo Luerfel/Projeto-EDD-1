@@ -62,7 +62,7 @@ int main() {
         imprimirTarefa(tarefa);
         if(tarefa.status==3){
             system("clear");
-            goto fim;
+            return;
         }
         inserirFila(filaTarefas,tarefa);
         voltaMenu();
@@ -103,7 +103,7 @@ int main() {
     return 0;
     break;
     }
-    fim:
+    
     }while(resp=='s');
     
     
@@ -187,6 +187,7 @@ Tarefa criarTarefa(){
 Fila* criaFila(){
     Fila*f=(Fila*)malloc(sizeof(Fila));
     f->ini=f->fim= NULL;
+    return f;
 }
 
 // função que insere um elemento no fim da lista
@@ -358,7 +359,7 @@ void voltaMenu(){
     while(getchar()!='\n');
     opcao = getchar();
     if(tolower(opcao)=='s'){
-        main();
+        return;
 
     }
     else if(tolower(opcao=='n')){
