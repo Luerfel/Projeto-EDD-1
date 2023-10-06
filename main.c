@@ -43,6 +43,7 @@ int compararData(Data dataInicio,Data dataTermino);
 void editarTarefa(Fila * inicio, int codigo);
 void imprimirTarefa(Tarefa nova);
 void voltaMenu();
+void limparTela();
 
 
 int main() {
@@ -61,8 +62,8 @@ int main() {
         tarefa = criarTarefa();
         imprimirTarefa(tarefa);
         if(tarefa.status==3){
-            system("clear");
-            return;
+            limparTela();
+            break;
         }
         inserirFila(filaTarefas,tarefa);
         voltaMenu();
@@ -73,7 +74,7 @@ int main() {
     case 2:
 
 
-        system("clear");
+        limparTela();
         printf("Por gentileza digita o codigo da tarefa a ser editada :\n");
         scanf("%d",&codigo);
         editarTarefa(filaTarefas,codigo);
@@ -123,32 +124,36 @@ Tarefa criarTarefa(){
     char resp;
     printf("Digite o codigo da tarefa a ser criada :\n");
     scanf("%d",&nova.codigo);
-    system("clear"); //limpa a tela
+    limparTela();
+
 
 
     printf("Digite o nome da Tarefa use no maximo 30 caracteres : \n");
     while(getchar()!='\n');
     fgets(nova.tarefa, 30, stdin);
-    system("clear"); //limpa a tela
+    limparTela();
+
 
 
 
     printf("Digite o nome do Projeto use no maximo 30 caracteres : \n");
     fgets(nova.projeto, 30, stdin);
-    system("clear"); //limpa a tela
+    limparTela();
+
 
 
 
     printf("Digite a data de inicio da Tarefa neste formato dd/mm/aaaa :\n ");
     scanf("%d/%d/%d", &nova.dataInicio.dia, &nova.dataInicio.mes, &nova.dataInicio.ano);
-    system("clear"); //limpa a tela
+    limparTela();
+
 
 
    
 
     printf("Digite o prazo para a entrega da Tarefa neste formato dd/mm/aaaa: \n");
     scanf("%d/%d/%d", &nova.dataTermino.dia, &nova.dataTermino.mes, &nova.dataTermino.ano);
-    system("clear"); //limpa a tela
+    limparTela();
     nova.status = compararData(nova.dataInicio,nova.dataTermino);
     imprimirTarefa(nova);
     printf("Antes de finalizar, certifique-se de que todos os campos estão preenchidos como deseja.\n");
@@ -176,7 +181,7 @@ Tarefa criarTarefa(){
          while(resp!= 's');
 
     
-    system("clear");
+    limparTela();
     printf("Parabéns, a tarefa foi adicionada com sucesso! \n\n");
   
  return nova;
@@ -217,7 +222,7 @@ void inserirFila(Fila *fila, Tarefa tarefa){
 int menu(){
   int opcao;
 
-    system("clear");
+    limparTela();
     while(1){
     printf("   /\\"); 
     printf("\n  /  \\");
@@ -233,7 +238,8 @@ int menu(){
    
     printf("Escolha uma opção: ");
     scanf("%d", &opcao);
-    system("clear"); //limpa a tela
+    limparTela();
+
 
   // validação de entrada
     if(opcao >= 1 && opcao <= 8) {
@@ -242,7 +248,8 @@ int menu(){
         printf("OPÇÃO INVALIDA!! Aperta ENTER para continuar \n");
         setbuf(stdin,NULL); //limpa o buffer do teclado para forçar a pausa em getchar
         getchar();
-        system("clear"); 
+        limparTela();
+
    
 
 
@@ -277,7 +284,7 @@ int compararData(Data dataInicio, Data dataTermino){
 }
 
 void mensagemFinal(){
-      system("clear");
+    limparTela();
        printf("   /\\"); 
     printf("\n  /  \\");
     printf("\n /____\\");
@@ -289,7 +296,8 @@ void mensagemFinal(){
 void editarTarefa(Fila * fila, int codigo){
     int opcao;
     No *aux = fila->ini;
-    system("clear");
+    limparTela();
+
 
     if(aux==NULL){
         printf("FILA VAZIA!\n\n");
@@ -298,13 +306,14 @@ void editarTarefa(Fila * fila, int codigo){
 
     while (aux->info.codigo!= codigo && aux->prox!=NULL)  // pecorre a lista ate achar um codigo igual ou ate o ultimo elemento
     {
-        system("clear");
+    limparTela();
+
         aux = aux->prox;
     
     }
   
     if (aux->info.codigo == codigo){
-        system("clear");
+        limparTela();
         printf("Tarefa encontrada!!\n\n");
         Tarefa tarefa = aux->info;
         imprimirTarefa(tarefa);
@@ -372,5 +381,10 @@ void voltaMenu(){
     }
 
 
+
+}
+void limparTela(){
+printf("\033[H\033[2J"); // Limpa tela no Linux/Mac
+printf("\033[2J"); // Limpa tela no Windows
 
 }
