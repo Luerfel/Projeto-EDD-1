@@ -287,7 +287,12 @@ void mensagemFinal(){
 void editarTarefa(Fila * fila, int codigo){
     int opcao;
     No *aux = fila->ini;
+    system("clear");
 
+    if(aux==NULL){
+        printf("FILA VAZIA!\n\n");
+        voltaMenu();
+    }
 
     while (aux->info.codigo!= codigo && aux->prox!=NULL)  // pecorre a lista ate achar um codigo igual ou ate o ultimo elemento
     {
