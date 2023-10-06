@@ -36,18 +36,19 @@ typedef struct Fila{
 Fila* criaFila();
 void insereFila(No*fim,Tarefa tarefa);
 int menu(); 
-void limparBuffer();
 void inserirFila(Fila *fila,Tarefa tarefa);
 void mensagemFinal();
 Tarefa criarTarefa();
 int compararData(Data dataInicio,Data dataTermino);
 void editarTarefa(Fila * inicio, int codigo);
-
+void imprimirTarefa(Tarefa nova);
+void voltaMenu();
 
 
 int main() {
     setlocale(LC_ALL, "Portuguese");
     int opcao; // variavel auxiliar do menu
+    int codigo;
     char resp='s'; // variavel auxiliar
     Tarefa tarefa;
     Fila *filaTarefas = criaFila();
@@ -63,27 +64,40 @@ int main() {
             goto fim;
         }
         inserirFila(filaTarefas,tarefa);
+        voltaMenu();
+       
+    
 
         break;
     case 2:
 
 
+        system("clear");
+        printf("Por gentileza digita o codigo da tarefa a ser editada :\n");
+        scanf("%d",&codigo);
+        editarTarefa(filaTarefas,codigo);
+
     break;
 
     case 3:
+     voltaMenu();
+       
 
     break;
     case 4:
-
+    voltaMenu();
     break;
     case 5:
+    voltaMenu();
 
     break;
     case 6:
+    voltaMenu();
 
     break;
     case 7:
         mensagemFinal();
+        return 0;
 
     return 0;
     break;
@@ -135,9 +149,7 @@ Tarefa criarTarefa(){
     scanf("%d/%d/%d", &nova.dataTermino.dia, &nova.dataTermino.mes, &nova.dataTermino.ano);
     system("clear"); //limpa a tela
     nova.status = compararData(nova.dataInicio,nova.dataTermino);
-
-    printf("Codigo : %d\nNome : %sProjeto : %sData de inicio: %d/%d/%d\nPrazo de entrega : %d/%d/%d\nStatus : %d\n\n",nova.codigo,nova.tarefa,nova.projeto,nova.dataInicio.dia
-    ,nova.dataInicio.mes,nova.dataInicio.ano,nova.dataTermino.dia,nova.dataTermino.mes,nova.dataTermino.ano,nova.status);
+    imprimirTarefa(nova);
     printf("Antes de finalizar, certifique-se de que todos os campos estão preenchidos como deseja.\n");
     
     printf("Para SALVAR a tarefa, digite 'S'. Para DESCARTAR, digite 'N'\n");
@@ -164,8 +176,8 @@ Tarefa criarTarefa(){
 
     
     system("clear");
-    printf("Parabéns, a tarefa foi adicionada com sucesso! Pressione Enter para continuar.\n");
-    getchar();
+    printf("Parabéns, a tarefa foi adicionada com sucesso! \n");
+  
  return nova;
 
 }
@@ -203,7 +215,7 @@ void inserirFila(Fila *fila, Tarefa tarefa){
 int menu(){
   int opcao;
 
-    
+    system("clear");
     while(1){
     printf("   /\\"); 
     printf("\n  /  \\");
@@ -241,11 +253,7 @@ int menu(){
 
     }
 }
-// Essa função vamos usar para a limpeza de Buffer do nosso programa, ele vai fazer o serviço de ficar pegando caracter do buffer
-void limparBuffer(){
-    char c;
-    while((c = getchar()) != 'n' && c!= EOF); 
-}
+
 // função que define os status automaticamente 
 int compararData(Data dataInicio, Data dataTermino){
     if (dataInicio.ano>dataTermino.ano){
@@ -277,10 +285,85 @@ void mensagemFinal(){
 }
 
 void editarTarefa(Fila * fila, int codigo){
-  No *aux = fila->ini;
-  while (aux->info.codigo!= codigo)
-  {
+    int opcao;
+    No *aux = fila->ini;
+
+
+    while (aux->info.codigo!= codigo && aux->prox!=NULL)  // pecorre a lista ate achar um codigo igual ou ate o ultimo elemento
+    {
+        system("clear");
+        aux = aux->prox;
     
-  }
+    }
   
+    if (aux->info.codigo == codigo){
+        system("clear");
+        printf("Tarefa encontrada!!\n\n");
+        Tarefa tarefa = aux->info;
+        imprimirTarefa(tarefa);
+        printf("Digite o número do campo que deseja modificar:\n1 - Codigo\n2 - Tarefa\n3 - Projeto\n4 - Data de Início\n5 - Data de Término\n\n ");
+        fflush(stdin);
+        scanf("%d",&opcao);
+        switch (opcao){
+            case 1:
+            printf("Codigo atual : %d\nDigite o novo Codigo : ",tarefa.codigo);
+            scanf("%d",&tarefa.codigo);
+            imprimirTarefa(tarefa);
+            
+            break;
+            
+            case 2:
+
+            break;
+
+            case 3:
+
+            break;
+
+            case 4:
+
+            break;
+
+            case 5:
+
+            break;
+        }
+
+
+    }
+    else {
+        printf("A tarefa com o código informado NÃO FOI ENCONTRADA.\n");
+        voltaMenu();
+      }
+        
+  
+  
+}
+void imprimirTarefa(Tarefa nova){
+    printf("Codigo : %d\nNOME : %s\nPROJETO : %s\nDATA DE INICIO : %d/%d/%d\nDATA DE TERMINO : %d/%d/%d\nSTATUS : %d\n\n",nova.codigo,nova.tarefa,nova.projeto,nova.dataInicio.dia
+    ,nova.dataInicio.mes,nova.dataInicio.ano,nova.dataTermino.dia,nova.dataTermino.mes,nova.dataTermino.ano,nova.status);
+
+}
+
+void voltaMenu(){
+
+    char opcao;
+    printf("Deseja voltar para o menu principal? S/N\n");
+    while(getchar()!='\n');
+    opcao = getchar();
+    if(tolower(opcao)=='s'){
+        main();
+
+    }
+    else if(tolower(opcao=='n')){
+        mensagemFinal();
+        exit(0);
+    }
+    else {
+        printf("Opção inválida. Por favor, digite S para voltar ao menu ou N para sair \n");
+        voltaMenu();
+    }
+
+
+
 }
