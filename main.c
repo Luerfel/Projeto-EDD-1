@@ -59,6 +59,7 @@ int main() {
     {
     case 1:
         tarefa = criarTarefa();
+        imprimirTarefa(tarefa);
         if(tarefa.status==3){
             system("clear");
             goto fim;
@@ -126,7 +127,7 @@ Tarefa criarTarefa(){
 
 
     printf("Digite o nome da Tarefa use no maximo 30 caracteres : \n");
-    getchar();
+    while(getchar()!='\n');
     fgets(nova.tarefa, 30, stdin);
     system("clear"); //limpa a tela
 
@@ -176,7 +177,7 @@ Tarefa criarTarefa(){
 
     
     system("clear");
-    printf("Parabéns, a tarefa foi adicionada com sucesso! \n");
+    printf("Parabéns, a tarefa foi adicionada com sucesso! \n\n");
   
  return nova;
 
