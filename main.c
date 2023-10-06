@@ -2,7 +2,6 @@
 #include <stdlib.h> 
 #include <locale.h> //necessário para usar setlocale
 #include <ctype.h>
-#include <unistd.h>
 
 // structs
 struct Data{
@@ -307,7 +306,7 @@ void editarTarefa(Fila * fila, int codigo){
         printf("Tarefa encontrada!!\n\n");
         Tarefa tarefa = aux->info;
         imprimirTarefa(tarefa);
-        printf("Digite o número do campo que deseja modificar:\n1 - Codigo\n2 - Tarefa\n3 - Projeto\n4 - Data de Início\n5 - Data de Término\n\n ");
+        printf("Digite o número do campo que deseja modificar:\n1 - Codigo\n2 - Nome Tarefa\n3 - Projeto\n4 - Data de Início\n5 - Data de Término\n\n ");
         fflush(stdin);
         scanf("%d",&opcao);
         switch (opcao){
@@ -319,18 +318,32 @@ void editarTarefa(Fila * fila, int codigo){
             break;
             
             case 2:
+            printf("Nome atual : %s\nDigite o novo nome : ",tarefa.tarefa);
+            while(getchar()!='\n');
+            fgets(tarefa.tarefa, 30, stdin);
+            imprimirTarefa(tarefa);
 
             break;
 
             case 3:
+            printf("Nome do projeto atual : %s\nDigite o novo nome de projeto: ",tarefa.projeto);
+            while(getchar()!='\n');
+            fgets(tarefa.projeto, 30, stdin);
+            imprimirTarefa(tarefa);
 
             break;
 
             case 4:
-
+            printf("Data de inicio atual : %d/%d/%d\nDigite a nova data : ", tarefa.dataInicio.dia, tarefa.dataInicio.mes, tarefa.dataInicio.ano);
+            scanf("%d/%d/%d", &tarefa.dataInicio.dia, &tarefa.dataInicio.mes, &tarefa.dataInicio.ano);
+            imprimirTarefa(tarefa);
+            
             break;
 
             case 5:
+            printf("Data de Termino atual : %d/%d/%d\nDigite a nova data : ", tarefa.dataTermino.dia, tarefa.dataTermino.mes, tarefa.dataTermino.ano);
+            scanf("%d/%d/%d", &tarefa.dataTermino.dia, &tarefa.dataTermino.mes, &tarefa.dataTermino.ano);
+            imprimirTarefa(tarefa);
 
             break;
         }
