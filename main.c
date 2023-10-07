@@ -84,8 +84,12 @@ int main() {
 
         break;
     case 2:
-
-
+    
+        if(filaTarefas->ini==NULL){
+            printf("FILA VAZIA!\n\n");
+            voltaMenu();
+            break;
+    }
         limparTela();
         printf("Por gentileza digita o codigo da tarefa a ser editada :\n");
         scanf("%d",&codigo);
@@ -372,28 +376,23 @@ void inserirFila(Fila *fila, Tarefa tarefa){
 
 // função de menu e texto
 int menu(){
-  int opcao;
+    int opcao;
 
-  char desenho[] = "   /\\\n  /  \\\n /____\\";
-
-  printf("%s", desenho);
-    
+    system("clear");
     while(1){
-    limparTela();
-    limparBuffer();
-    printf("%s", desenho);
-    printf("\nSistema de Gerenciamento de Tarefas Triangulus \n\n");
-    printf("1 - Adicionar uma nova Tarefa\n");
-    printf("2 - Modificar uma Tarefa.\n"); 
-    printf("3 - Concluir Tarefa\n");
-    printf("4 - Lista de Tarefas Pendentes\n");
-    printf("5 - Lista de Tarefas Concluídas \n"); 
-    printf("6 - Lista de Tarefas Concluídas com e sem Atrasos\n");
-    printf("7 - Sair do Programa\n\n"); 
+        printf("   /\\\n  /  \\\n /____\\");
+        printf(" Sistema de Gerenciamento de Tarefas Triangulus \n\n");
+        printf("1 - Adicionar uma nova Tarefa\n");
+        printf("2 - Modificar uma Tarefa.\n"); 
+        printf("3 - Concluir Tarefa\n");
+        printf("4 - Lista de Tarefas Pendentes\n");
+        printf("5 - Lista de Tarefas Concluídas \n"); 
+        printf("6 - Lista de Tarefas Concluídas com e sem Atrasos\n");
+        printf("7 - Sair do Programa\n\n"); 
    
-    printf("Escolha uma opção: ");
-    scanf("%d", &opcao);
-    limparTela();
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+        limparTela();
 
 
   // validação de entrada
@@ -401,20 +400,10 @@ int menu(){
         return opcao;
 } else {
         printf("OPÇÃO INVALIDA!! Aperta ENTER para continuar \n");
-        setbuf(stdin,NULL); //limpa o buffer do teclado para forçar a pausa em getchar
+        limparBuffer();
         getchar();
         limparTela();
-
-   
-
-
-
-
 }
-
-
-
-
     }
 }
 
@@ -435,6 +424,7 @@ void voltaMenu(){
     while(getchar()!='\n');
     opcao = getchar();
     if(tolower(opcao)=='s'){
+        limparBuffer();
         limparTela();
         return;
 
@@ -473,9 +463,16 @@ int compararData(Data dataInicio, Data dataTermino){
     
 
 }
-void limparTela(){
-printf("\033[H\033[2J"); // Limpa tela no Linux/Mac
-printf("\033[2J"); // Limpa tela no Windows
+void limparTela() {
+// essa função assim como todo os programas foi pensando para que ele funciona em qualquer sistema operacional
+  #if defined(_WIN32)
+    system("cls");
+  #elif defined(__linux__) 
+    system("clear"); 
+  #elif defined(__APPLE__)
+    system("clear");
+  #endif
+
 
 
 }
