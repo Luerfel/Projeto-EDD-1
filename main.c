@@ -380,7 +380,7 @@ int menu(){
     
     while(1){
     limparTela();
-    fflush(stdout);
+    limparBuffer();
     printf("%s", desenho);
     printf("\nSistema de Gerenciamento de Tarefas Triangulus \n\n");
     printf("1 - Adicionar uma nova Tarefa\n");
