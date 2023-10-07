@@ -38,11 +38,14 @@ typedef struct Fila{
 int menu(); 
 void mensagemFinal();
 void voltaMenu();
+void filaVazia();
 
 //Protótipos das Funções de Fila
 Fila* criaFila();
 void inserirFila(Fila *fila,Tarefa tarefa);
 No * insFim(No *fim,Tarefa tarefa);
+int percorrerLista(Fila *fila, int codigo);
+
 
 //protótipos das Funções de Tarefa
 Tarefa criarTarefa();
@@ -55,6 +58,9 @@ int compararData(Data dataInicio,Data dataTermino);
 void limparTela();
 void limparBuffer();
 char* leituraString(char str[]);
+void dataAtual(Data *data);
+
+
 
 
 
@@ -86,10 +92,9 @@ int main() {
     case 2:
     
         if(filaTarefas->ini==NULL){
-            printf("FILA VAZIA!\n\n");
-            voltaMenu();
+            filaVazia();
             break;
-    }
+            }
         limparTela();
         printf("Por gentileza digita o codigo da tarefa a ser editada :\n");
         scanf("%d",&codigo);
@@ -98,11 +103,16 @@ int main() {
     break;
 
     case 3:
-    voltaMenu();
-        // limparTela();
-        // printf("Por gentileza digita o codigo da tarefa a ser concluida :\n");
-        // scanf("%d",&codigo);
-        // concluirTarefa(filaTarefas,codigo);
+        
+        limparTela();
+
+        if(filaTarefas->ini==NULL){
+            filaVazia();
+            break;
+            }
+        printf("Por gentileza digita o codigo da tarefa a ser concluida :\n");
+        scanf("%d",&codigo);
+        concluirTarefa(filaTarefas,codigo);
 
     break;
     case 4:
@@ -289,13 +299,15 @@ void imprimirTarefa(Tarefa nova){
 
 No concluirTarefa(Fila * fila, int codigo){
     char opcao;
+    int opcao2;
     No *aux = fila->ini;
+    Data data;
+    dataAtual(&data);
     limparTela();
 
 
     if(aux==NULL){
-        printf("FILA VAZIA!\n\n");
-        voltaMenu();
+       filaVazia();
     }
 
     while (aux->info.codigo!= codigo && aux->prox!=NULL)  // pecorre a lista ate achar um codigo igual ou ate o ultimo elemento
@@ -311,35 +323,29 @@ No concluirTarefa(Fila * fila, int codigo){
         imprimirTarefa(tarefa);
 
         printf("Deseja marcar como concluida? (s/n):");
-        fflush(stdin);
-        scanf("%c",&opcao);
+        limparBuffer();
+        opcao=getchar();
 
         if (opcao ==  's') {
-            time_t t = time(NULL);
-            struct tm tm = *localtime(&t);
+            do {
+            printf("Para finalizar, define a data de conclusão em umas das opções abaixo:\n1 - Data de hoje (%d/%d/%d)\n2 - Inserir uma data de conclusão diferente\n Sua escolha 1 ou 2 : \n",data.dia,data.mes,data.ano);
+            scanf("%d",&opcao2);
+            limparTela();
+            if (opcao2==1){
 
-            Data hoje;
-            hoje.ano = tm.tm_year + 1900;
-            hoje.mes = tm.tm_mon + 1;
-            hoje.dia = tm.tm_mday;
+            }
+            else if(opcao2==2){
 
-            if (compararData(tarefa.dataInicio, hoje) == -1) {
-                tarefa.status = 0;
-                limparTela();
-                aux->info = tarefa;
-                imprimirTarefa(tarefa);
             }
-            if (compararData(tarefa.dataInicio, hoje) == 1) {
-                tarefa.status = 1;
-                limparTela();
-                aux->info = tarefa;
-                imprimirTarefa(tarefa);
+            else{
+                printf("Opção INVALIDA!");
+                continue;
             }
-        }
+            }while(2);}
 
     } else {
         printf("A tarefa com o código informado NÃO FOI ENCONTRADA.\n");
-        voltaMenu();
+        return ;
     } 
 } 
 
@@ -373,12 +379,42 @@ void inserirFila(Fila *fila, Tarefa tarefa){
 
 }
 
+int percorrerLista(Fila * fila, int codigo){
+    int opcao;
+    No *aux = fila->ini;
+    limparTela();
+
+
+    if(aux==NULL){
+        filaVazia();
+        voltaMenu();
+        return;
+    }
+
+    while (aux->info.codigo!= codigo && aux->prox!=NULL) 
+    {
+    limparTela();
+
+        aux = aux->prox;
+    
+    }
+  
+    if (aux->info.codigo == codigo){
+      return 0;
+        }
+    else {
+        printf("A tarefa com o código informado NÃO FOI ENCONTRADA.\n");
+        voltaMenu();
+        return 1;
+    }
+
+  
+}
 
 // função de menu e texto
 int menu(){
     int opcao;
 
-    system("clear");
     while(1){
         printf("   /\\\n  /  \\\n /____\\");
         printf(" Sistema de Gerenciamento de Tarefas Triangulus \n\n");
@@ -443,6 +479,15 @@ void voltaMenu(){
 
 }
 
+void filaVazia(){
+    limparTela();
+    printf("FILA VAZIA!\n\n");
+    limparBuffer();
+    printf("Pressione ENTER para continuar\n");
+    getchar();
+    limparTela();
+}
+
 
 // funções auxiliares 
 int compararData(Data dataInicio, Data dataTermino){
@@ -494,4 +539,13 @@ char* leituraString(char str[]) {
     str[i] = '\0';
 
 
+}
+void dataAtual(Data *data){
+
+  time_t now = time(NULL);
+  struct tm *info = localtime(&now);
+
+  data->dia = info->tm_mday; 
+  data->mes = info->tm_mon + 1;
+  data->ano = info->tm_year + 1900;
 }
