@@ -201,6 +201,7 @@ void editarTarefa(Fila * fila, int codigo){
     if(aux==NULL){
         printf("FILA VAZIA!\n\n");
         voltaMenu();
+        return;
     }
 
     while (aux->info.codigo!= codigo && aux->prox!=NULL)  // pecorre a lista ate achar um codigo igual ou ate o ultimo elemento
@@ -270,6 +271,7 @@ void editarTarefa(Fila * fila, int codigo){
     } else {
         printf("A tarefa com o código informado NÃO FOI ENCONTRADA.\n");
         voltaMenu();
+        return;
     }
 
   
@@ -372,12 +374,14 @@ void inserirFila(Fila *fila, Tarefa tarefa){
 int menu(){
   int opcao;
 
+  char desenho[] = "   /\\\n  /  \\\n /____\\";
+
+  printf("%s", desenho);
     
     while(1){
     limparTela();
-    printf("   /\\"); 
-    printf("\n  /  \\");
-    printf("\n /____\\");
+    fflush(stdout);
+    printf("%s", desenho);
     printf("\nSistema de Gerenciamento de Tarefas Triangulus \n\n");
     printf("1 - Adicionar uma nova Tarefa\n");
     printf("2 - Modificar uma Tarefa.\n"); 
@@ -427,7 +431,6 @@ void mensagemFinal(){
 void voltaMenu(){
 
     char opcao;
-    limparTela();
     printf("Deseja voltar para o menu principal? S/N\n");
     while(getchar()!='\n');
     opcao = getchar();
@@ -473,6 +476,7 @@ int compararData(Data dataInicio, Data dataTermino){
 void limparTela(){
 printf("\033[H\033[2J"); // Limpa tela no Linux/Mac
 printf("\033[2J"); // Limpa tela no Windows
+
 
 }
 void limparBuffer(){
