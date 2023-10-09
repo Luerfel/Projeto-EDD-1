@@ -166,8 +166,16 @@ Tarefa criarTarefa()
 {
     Tarefa nova;
     char resp;
+    do{
     printf("Digite o codigo da tarefa a ser criada :\n");
-    scanf("%d", &nova.codigo);
+    if(scanf("%d", &nova.codigo) == 1){
+        break; 
+    }
+    else{
+        printf("ERRO ao salvar o codigo. lembre-se de inserir apenas numeros inteiros!\n");
+        limparBuffer();
+    } }while(1);
+
     limparBuffer();
     limparTela();
 
