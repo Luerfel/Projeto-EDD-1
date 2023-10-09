@@ -68,8 +68,10 @@ int compararData(Data dataInicio, Data dataTermino);
 void limparTela();
 void limparBuffer();
 char *leituraString(char str[]);
+int lerCodigo();
 void dataAtual(Data *data);
 void pausaEnter();
+char validarOpcao();
 
 int main()
 {
@@ -82,7 +84,6 @@ int main()
     do
     {
         opcao = menu();
-
         switch (opcao)
         {
         case 1:
@@ -99,15 +100,10 @@ int main()
             break;
         case 2:
 
-            if (filaTarefas->ini == NULL)
-            {
-                filaVazia();
-                break;
-            }
+            if (filaTarefas->ini == NULL){filaVazia();break;}
             limparTela();
             printf("Por gentileza digita o codigo da tarefa a ser editada :\n");
-            scanf("%d", &codigo);
-            limparBuffer();
+            codigo = lerCodigo();
             editarTarefa(filaTarefas, codigo);
 
             break;
@@ -116,13 +112,9 @@ int main()
 
             limparTela();
 
-            /*if(filaTarefas->ini==NULL){
-                filaVazia();
-                break;
-                }*/
+            if(filaTarefas->ini==NULL){filaVazia();break;}
             printf("Por gentileza digita o codigo da tarefa a ser concluida :\n");
-            scanf("%d", &codigo);
-            limparBuffer();
+            codigo = lerCodigo();
             opcao = percorrerLista(filaTarefas, codigo);
             if (opcao == 1)
             {
@@ -136,6 +128,7 @@ int main()
             }
             break;
         case 4:
+            pausaEnter();
             voltaMenu();
             break;
         case 5:
@@ -166,17 +159,7 @@ Tarefa criarTarefa()
 {
     Tarefa nova;
     char resp;
-    do{
-    printf("Digite o codigo da tarefa a ser criada :\n");
-    if(scanf("%d", &nova.codigo) == 1){
-        break; 
-    }
-    else{
-        printf("ERRO ao salvar o codigo. lembre-se de inserir apenas numeros inteiros!\n");
-        limparBuffer();
-    } }while(1);
-
-    limparBuffer();
+    nova.codigo = lerCodigo();
     limparTela();
 
     printf("Digite o nome da Tarefa use no maximo 30 caracteres : \n");
@@ -319,15 +302,20 @@ void editarTarefa(Fila *fila, int codigo)
         switch (opcao)
         {
         case 1:
+            do{
             printf("Codigo atual : %d\nDigite o novo Codigo : ", tarefa.codigo);
-            scanf("%d", &tarefa.codigo);
-            limparBuffer();
-            limparTela();
-            aux->info = tarefa;
-            imprimirTarefa(tarefa);
-
+                if(scanf("%d", &tarefa.codigo) == 1){
+                    limparBuffer();
+                    limparTela();
+                    aux->info = tarefa;
+                    imprimirTarefa(tarefa);
+                break; }
+            else{
+                limparTela();
+                printf("ERRO ao salvar o codigo. lembre-se de inserir apenas numeros inteiros!\n");
+                limparBuffer();
+            } }while(1);
             break;
-
         case 2:
             printf("Nome atual : %s\nDigite o novo Nome : ", tarefa.tarefa);
             leituraString(tarefa.tarefa);
@@ -347,7 +335,7 @@ void editarTarefa(Fila *fila, int codigo)
 
         case 4:
             printf("Data de inicio atual : %d/%d/%d\nDigite a nova data : ", tarefa.dataInicio.dia, tarefa.dataInicio.mes, tarefa.dataInicio.ano);
-            scanf("%d/%d/%d", &tarefa.dataInicio.dia, &tarefa.dataInicio.mes, &tarefa.dataInicio.ano);
+            tarefa.dataInicio = lerDataValida();
             limparBuffer();
             aux->info = tarefa;
             imprimirTarefa(tarefa);
@@ -356,7 +344,7 @@ void editarTarefa(Fila *fila, int codigo)
 
         case 5:
             printf("Data de Termino atual : %d/%d/%d\nDigite a nova data : ", tarefa.dataTermino.dia, tarefa.dataTermino.mes, tarefa.dataTermino.ano);
-            scanf("%d/%d/%d", &tarefa.dataTermino.dia, &tarefa.dataTermino.mes, &tarefa.dataTermino.ano);
+            tarefa.dataTermino = lerDataValida();
             limparBuffer();
             aux->info = tarefa;
             imprimirTarefa(tarefa);
@@ -405,9 +393,7 @@ Tarefa concluirTarefa(Fila *fila, int codigo)
         imprimirTarefa(tarefa);
 
         printf("Deseja marcar como concluida? (s/n):");
-
-        opcao = getchar();
-        limparBuffer();
+        opcao = validarOpcao();
 
         if (opcao == 's')
         {
@@ -438,8 +424,7 @@ Tarefa concluirTarefa(Fila *fila, int codigo)
                 {
                     limparTela();
                     printf("Digite a Data de termino da Tarefa neste formato dd/mm/aaaa: \n");
-                    scanf("%d/%d/%d", &tarefa.dataTermino.dia, &tarefa.dataTermino.mes, &tarefa.dataTermino.ano);
-                    limparBuffer();
+                    tarefa.dataTermino = lerDataValida();
                     tarefa.status = compararData(tarefa.dataInicio, tarefa.dataTermino);
                     if (tarefa.status == 0)
                     { // se a tarefa foi finalizada sem esta atrasada ela recebe o status de em dia
@@ -454,9 +439,8 @@ Tarefa concluirTarefa(Fila *fila, int codigo)
                         return tarefa;
                     }
                 }
-                else
-                {
-                    printf("Opção INVALIDA!");
+                else{
+                    printf("opção INVALIDA!");
                     continue;
                 }
             } while (2);
@@ -613,26 +597,18 @@ void voltaMenu()
 
     char opcao;
     printf("Deseja voltar para o menu principal? S/N\n");
-    opcao = getchar();
+    opcao = validarOpcao();
 
     if (tolower(opcao) == 's')
     {
         limparTela();
-        limparBuffer();
         return;
     }
     else if (tolower(opcao == 'n'))
     {
         limparTela();
-        limparBuffer();
         mensagemFinal();
         exit(0);
-    }
-    else
-    {
-        printf("Opção inválida. Por favor, digite S para voltar ao menu ou N para sair \n");
-        limparBuffer();
-        voltaMenu();
     }
 }
 
@@ -679,6 +655,21 @@ char *leituraString(char str[])
     }while(2);
 
 }
+int lerCodigo() {
+  int codigo;
+  
+  do {
+    printf("Digite o código: \n");
+    
+    if(scanf("%d", &codigo) == 1) {
+        limparBuffer();
+        return codigo;
+    }else {
+        printf("Erro! Digite apenas números inteiros.\n");
+        limparBuffer(); 
+    }
+  } while(1);
+}
 void dataAtual(Data *data)
 {
 
@@ -699,12 +690,27 @@ void limparBuffer()
 }
 void pausaEnter() {
 
-  printf("Pressione ENTER para continuar...");
+    printf("Pressione ENTER para continuar...");
 
-  int ch = getchar();
-
-  while(ch != '\n' && ch != EOF) {
-    limparBuffer();
+    int ch = getchar();
+    while(ch != '\n' && ch != EOF) {
+        ch = getchar();
   }
+
+}
+char validarOpcao() {
+
+    char opcao;
+
+    do {
+        opcao = getchar();
+        limparBuffer(); 
+        tolower(opcao); 
+    if(opcao != 's' && opcao != 'n') {
+        printf("Opção inválida. Digite apenas s ou n.\n");
+    }
+
+  } while(opcao != 's' && opcao != 'n');
+    return opcao;
 
 }
