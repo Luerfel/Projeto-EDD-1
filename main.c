@@ -4,6 +4,9 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <time.h> // necessário para comparar data de termino
+// vamos usar para validar a entrada de dados do tipo DATA
+#define MAX_DIA 31
+#define MAX_MES 12
 
 
 // ESTRUTURAS
@@ -45,12 +48,15 @@ Fila* criaFila();
 void inserirFila(Fila *fila,Tarefa tarefa);
 No * insFim(No *fim,Tarefa tarefa);
 int percorrerLista(Fila *fila, int codigo);
+void retiraFila (Fila *fila,int codigo);
+
+
 
 
 //protótipos das Funções de Tarefa
 Tarefa criarTarefa();
 void imprimirTarefa(Tarefa nova);
-No concluirTarefa();
+Tarefa concluirTarefa();
 void editarTarefa(Fila * inicio, int codigo);
 
 //Protótipos das Funções auxiliares
@@ -314,7 +320,7 @@ void imprimirTarefa(Tarefa nova){
 
 }
 
-No concluirTarefa(Fila * fila, int codigo){
+Tarefa concluirTarefa(Fila * fila, int codigo){
     char opcao;
     int opcao2;
     No *aux = fila->ini;
@@ -351,9 +357,37 @@ No concluirTarefa(Fila * fila, int codigo){
             scanf("%d",&opcao2);
             limparTela();
             if (opcao2==1){
+                tarefa.dataTermino = data;
+                tarefa.status = compararData(tarefa.dataInicio,tarefa.dataTermino);
+                if(tarefa.status== 0){ // se a tarefa foi finalizada sem esta atrasada ela recebe o status de em dia
+                    printf("PARABÉNS pela dedicação, a tarefa foi entregue sem atrasos.\n ");
+                    retiraFila(fila,codigo);
+                    return tarefa;
+                }
+                else {
+                    printf("Tarefa concluída com atraso, obrigado pelo empenho");
+                    retiraFila(fila,codigo);
+                    return tarefa;
+                }
+                
 
             }
             else if(opcao2==2){
+                limparTela();
+                printf("Digite a Data de termino da Tarefa neste formato dd/mm/aaaa: \n");
+                scanf("%d/%d/%d", &tarefa.dataTermino.dia, &tarefa.dataTermino.mes, &tarefa.dataTermino.ano);
+                limparBuffer();
+                tarefa.status = compararData(tarefa.dataInicio,tarefa.dataTermino);
+                if(tarefa.status== 0){ // se a tarefa foi finalizada sem esta atrasada ela recebe o status de em dia
+                    printf("PARABÉNS pela dedicação, a tarefa foi entregue sem atrasos.\n ");
+                    retiraFila(fila,codigo);
+                    return tarefa;
+                }
+                else {
+                    printf("Tarefa concluída com atraso, obrigado pelo empenho");
+                    retiraFila(fila,codigo);
+                    return tarefa;
+                }
 
             }
             else{
@@ -364,7 +398,7 @@ No concluirTarefa(Fila * fila, int codigo){
 
     } else {
         printf("A tarefa com o código informado NÃO FOI ENCONTRADA.\n");
-        return ;
+    
     } 
 } 
 
@@ -383,11 +417,33 @@ No* insFim(No* fim,Tarefa tarefa){
         fim ->prox = novo;  // se a lista nao estiver vazia o nó anterior vai apontar para esse novo nó 
     }
     return novo;
+}
 
-
-
-
-
+void  retiraFila (Fila *fila,int codigo)
+{
+    if(fila->ini==NULL){
+        filaVazia();
+        return;
+    }
+    No *atual = fila->ini;
+    No *anterior = NULL;
+    while (atual->info.codigo!= codigo && atual->prox!=NULL) {
+        anterior = atual;
+        atual = atual->prox;
+    
+    }
+    if(anterior==NULL){ // Se anterior é igual NULL então significa que o nó que iremos tirar é o inicio da fila
+        if (atual->prox==NULL){           // se o prox do atual tbm é igual NULL então a Fila so tem ele como elemento
+            fila->ini = fila->fim = NULL;
+        }
+        fila->ini=atual->prox;   //o segundo elemento se torna o primeiro
+    }
+    // remover nó no meio/fim
+    else {
+        anterior->prox=atual->prox;
+    }
+    free(atual);
+    
 }
 
 void inserirFila(Fila *fila, Tarefa tarefa){
@@ -515,13 +571,15 @@ void filaVazia(){
 }
 
 
+
+
 // funções auxiliares 
 int compararData(Data dataInicio, Data dataTermino){
     if (dataInicio.ano>dataTermino.ano){
         return 1;
     }
     else if (dataInicio.ano!=dataTermino.ano){
-        return -1;
+        return 0;
     }
     else if (dataInicio.mes>dataTermino.mes){
         return 1;
@@ -530,7 +588,7 @@ int compararData(Data dataInicio, Data dataTermino){
         return 1;
     }
     else
-        return -1;
+        return 0;
     
 
 }
