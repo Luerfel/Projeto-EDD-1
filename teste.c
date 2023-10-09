@@ -1,23 +1,23 @@
-#include <stdio.h>
-
-int main() {
-
-  int numero;
-  // Lê o número com scanf
-  scanf("%d", &numero);
-
-  int c;
-
-  // Loop para ler caractere a caractere com getchar()
-  printf("Conteudo do buffer: \n");
-  while((c = getchar()) != EOF) {
-
-    // Imprime cada caractere lido
-    putchar(c);
-
+do {
+  limparTela();
+  printf("Digite a Data de termino da Tarefa neste formato dd/mm/aaaa: \n"); 
+  
+  if(scanf("%d/%d/%d", &dia, &mes, &ano) != 3) {
+    printf("Formato de data invalido, tente novamente!\n");
+    continue;
   }
 
-  printf("\n");
+  if(dia < 1 || dia > MAX_DIA) {
+    printf("Dia invalido, deve ser entre 1 e %d\n", MAX_DIA);
+    continue;  
+  }
 
-  return 0;
-}
+  if(mes < 1 || mes > MAX_MES) {
+    printf("Mes invalido, deve ser entre 1 e %d\n", MAX_MES);
+    continue;
+  }
+
+  // data validada com sucesso
+  break;
+
+} while(1);
