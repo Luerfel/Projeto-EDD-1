@@ -65,6 +65,7 @@ void limparTela();
 void limparBuffer();
 char* leituraString(char str[]);
 void dataAtual(Data *data);
+Data lerDataValida(Data data);
 
 
 
@@ -591,6 +592,30 @@ int compararData(Data dataInicio, Data dataTermino){
         return 0;
     
 
+}
+Data lerDataValida(Data data) {
+
+  do {
+    if(scanf("%d/%d/%d", &data.dia, &data.mes, &data.ano) != 3) {
+      printf("Formato de data invalido, tente novamente!\n");
+      continue;
+    }
+
+    if(data.dia < 1 || data.dia > MAX_DIA) {
+      printf("Dia invalido, deve ser entre 1 e %d\n", MAX_DIA);
+      continue;  
+    }
+
+    if(data.mes < 1 || data.mes > MAX_MES) {
+      printf("Mes invalido, deve ser entre 1 e %d\n", MAX_MES);
+      continue;
+    }
+
+    return data; // data válida
+
+  } while(1);
+
+  
 }
 void limparTela() {
 // essa função assim como todo os programas foi pensando para que ele funciona em qualquer sistema operacional
