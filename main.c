@@ -49,12 +49,13 @@ void mensagemFinal();
 void voltaMenu();
 void filaVazia();
 
-// Protótipos das Funções de Fila
+// Protótipos das Funções de Fila e Lista
 Fila *criaFila();
 void inserirFila(Fila *fila, Tarefa tarefa);
 No *insFim(No *fim, Tarefa tarefa);
 int percorrerLista(Fila *fila, int codigo);
 void retiraFila(Fila *fila, int codigo);
+void inserirLista(No *lista,Tarefa tarefa);
 
 // protótipos das Funções de Tarefa
 Tarefa criarTarefa();
@@ -78,10 +79,10 @@ int main()
     setlocale(LC_ALL, "Portuguese");
     int opcao; // variavel auxiliar do menu
     int codigo;
-    char resp = 's'; // variavel auxiliar
     Tarefa tarefa;
     Fila *filaTarefas = criaFila();
-    No *listaConcluida;
+    No *listaConcluida = NULL;
+    
     do
     {
         opcao = menu();
@@ -149,7 +150,7 @@ int main()
             break;
         }
 
-    } while (resp == 's');
+    } while (2);
 
     return 0;
 }
@@ -542,6 +543,19 @@ int percorrerLista(Fila *fila, int codigo)
         voltaMenu();
         return 1;
     }
+}
+
+void inserirLista(No *lista,Tarefa tarefa){
+    No *novo =(No*)malloc(sizeof(No));
+    novo->info = tarefa;
+
+    if(lista==NULL){
+        lista = novo;
+        novo->prox = NULL;
+    }
+    novo->prox = lista;
+    lista = novo;
+
 }
 
 // função de menu e texto
