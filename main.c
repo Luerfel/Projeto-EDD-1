@@ -81,6 +81,7 @@ int main()
     char resp = 's'; // variavel auxiliar
     Tarefa tarefa;
     Fila *filaTarefas = criaFila();
+    No *listaConcluida;
     do
     {
         opcao = menu();
