@@ -65,7 +65,7 @@ void limparTela();
 void limparBuffer();
 char* leituraString(char str[]);
 void dataAtual(Data *data);
-Data lerDataValida(Data data);
+Data lerDataValida();
 
 
 
@@ -182,8 +182,7 @@ Tarefa criarTarefa(){
     limparTela();
 
     printf("Digite a data de inicio da Tarefa neste formato dd/mm/aaaa :\n");
-    scanf("%d/%d/%d", &nova.dataInicio.dia, &nova.dataInicio.mes, &nova.dataInicio.ano);
-    limparBuffer();
+    nova.dataInicio = lerDataValida();
     limparTela();
     
 
@@ -191,9 +190,8 @@ Tarefa criarTarefa(){
 
    
 
-    printf("Digite o prazo para a entrega da Tarefa neste formato dd/mm/aaaa: \n");
-    scanf("%d/%d/%d", &nova.dataTermino.dia, &nova.dataTermino.mes, &nova.dataTermino.ano);
-    limparBuffer();
+    printf("Digite a data de termino da tarefa neste formato dd/mm/aaaa: \n");
+    nova.dataTermino= lerDataValida();
     limparTela();
     nova.status = compararData(nova.dataInicio,nova.dataTermino);
     imprimirTarefa(nova);
@@ -593,24 +591,33 @@ int compararData(Data dataInicio, Data dataTermino){
     
 
 }
-Data lerDataValida(Data data) {
+Data lerDataValida() {
 
   do {
+    Data data;
     if(scanf("%d/%d/%d", &data.dia, &data.mes, &data.ano) != 3) {
-      printf("Formato de data invalido, tente novamente!\n");
-      continue;
+        printf("Formato de data invalido, tente novamente!\nPor favor digite a data neste formato dd/mm/aaaa ex: 19/03/2023\n");
+        limparBuffer();
+        continue;
     }
 
     if(data.dia < 1 || data.dia > MAX_DIA) {
-      printf("Dia invalido, deve ser entre 1 e %d\n", MAX_DIA);
-      continue;  
+        printf("Dia invalido, deve ser entre 1 e %d\nPor favor digite a data neste formato dd/mm/aaaa ex: 19/03/2023\n", MAX_DIA);
+        limparBuffer();
+        continue;  
     }
 
     if(data.mes < 1 || data.mes > MAX_MES) {
-      printf("Mes invalido, deve ser entre 1 e %d\n", MAX_MES);
-      continue;
+        printf("Mes invalido, deve ser entre 1 e %d\nPor favor digite a data neste formato dd/mm/aaaa ex: 19/03/2023\n", MAX_MES);
+        limparBuffer();
+        continue;
     }
-
+    if(data.ano < 1000 || data.ano > 9999) {
+         printf("Ano inválido. Lembre-se que a formatação correta pede o ano com todos os seus 4 dígitos\nPor favor digite a data neste formato dd/mm/aaaa ex: 19/03/2023\n");
+         limparBuffer();
+        continue;
+    }
+    limparBuffer();
     return data; // data válida
 
   } while(1);
