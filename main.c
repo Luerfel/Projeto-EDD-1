@@ -651,17 +651,25 @@ void limparTela()
 }
 char *leituraString(char str[])
 {
-    int i = 0;
     char ch;
-
+    do {
+    int i = 0;
     // ler cada caracter até enter
     while ((ch = getchar()) != '\n')
     {
         str[i++] = ch;
     }
+    if(i<30){
+        str[i] = '\0';
+        return str;
+    }
+    if(i>30){
+        limparTela();
+        printf("nome maior que 30 caracteres, Por favor digite novamente! caracteres atual: %d\n",i);
+        continue;
+    }
+    }while(2);
 
-    // adicionar null terminator
-    str[i] = '\0';
 }
 void dataAtual(Data *data)
 {
