@@ -120,7 +120,8 @@ int main()
             opcao = percorrerLista(filaTarefas, codigo);
             if (opcao == 1)
             {
-                concluirTarefa(filaTarefas, codigo);
+                tarefa = concluirTarefa(filaTarefas, codigo);
+                inserirLista(listaConcluida,tarefa);
             }
             else if (opcao == 0)
             {
@@ -546,15 +547,32 @@ int percorrerLista(Fila *fila, int codigo)
 }
 
 void inserirLista(No *lista,Tarefa tarefa){
+    int aux;
     No *novo =(No*)malloc(sizeof(No));
+    No *auxLista;
     novo->info = tarefa;
 
     if(lista==NULL){
         lista = novo;
         novo->prox = NULL;
+        return;
     }
-    novo->prox = lista;
-    lista = novo;
+    else if(lista->prox==NULL){
+        lista->prox= novo;
+        novo->prox = NULL;
+        return;
+    }
+    else{
+        auxLista= lista;
+        do
+        {
+        aux = compararData(tarefa.dataTermino,auxLista->info.dataTermino);
+        auxLista = auxLista->prox;
+
+        } while (aux!=1 && auxLista->prox!=NULL);
+        novo->prox = auxLista;
+        auxLista->prox = novo;
+    }
 
 }
 

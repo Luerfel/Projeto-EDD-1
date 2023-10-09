@@ -1,28 +1,22 @@
-
-Data lerDataValida(Data data) {
-
-  do {
-    limparTela();
-    printf("Digite a Data de termino da Tarefa neste formato dd/mm/aaaa: \n");
-
-    if(scanf("%d/%d/%d", data.dia, data.mes, data.ano) != 3) {
-      printf("Formato de data invalido, tente novamente!\n");
-      continue;
+    if (dataInicio.ano > dataTermino.ano)
+    {
+        return 1;
     }
-
-    if(*dia < 1 || data.dia > MAX_DIA) {
-      printf("Dia invalido, deve ser entre 1 e %d\n", MAX_DIA);
-      continue;  
+    else if (dataInicio.ano != dataTermino.ano)
+    {
+        return 0;
     }
-
-    if(*mes < 1 || data.mes > MAX_MES) {
-      printf("Mes invalido, deve ser entre 1 e %d\n", MAX_MES);
-      continue;
+    else if (dataInicio.mes > dataTermino.mes)
+    {
+        return 1;
     }
+    else if (dataInicio.mes == dataTermino.mes && dataInicio.dia > dataTermino.dia)
+    {
+        return 1;
+    }
+    else
+        return 0;
 
-    return data; // data válida
 
-  } while(1);
 
-  
-}
+// 1 atrasada, 0 em dia
