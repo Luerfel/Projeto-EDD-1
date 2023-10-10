@@ -55,12 +55,13 @@ void inserirFila(Fila *fila, Tarefa tarefa);
 No *insFim(No *fim, Tarefa tarefa);
 int percorrerLista(Fila *fila, int codigo);
 void retiraFila(Fila *fila, int codigo);
-void inserirLista(No *lista,Tarefa tarefa);
+No *inserirLista(No *lista,Tarefa tarefa);
+void imprimirLista(No *p);
 
 // protótipos das Funções de Tarefa
 Tarefa criarTarefa();
 void imprimirTarefa(Tarefa nova);
-Tarefa concluirTarefa();
+Tarefa concluirTarefa(Fila *fila, int codigo);
 void editarTarefa(Fila *inicio, int codigo);
 Data lerDataValida();
 int compararData(Data dataInicio, Data dataTermino);
@@ -73,6 +74,7 @@ int lerCodigo();
 void dataAtual(Data *data);
 void pausaEnter();
 char validarOpcao();
+
 
 int main()
 {
@@ -121,7 +123,9 @@ int main()
             if (opcao == 1)
             {
                 tarefa = concluirTarefa(filaTarefas, codigo);
-                inserirLista(listaConcluida,tarefa);
+                pausaEnter();
+                listaConcluida=inserirLista(listaConcluida,tarefa);
+                
             }
             else if (opcao == 0)
             {
@@ -140,6 +144,7 @@ int main()
 
             break;
         case 6:
+            imprimirLista(listaConcluida);
             voltaMenu();
 
             break;
@@ -339,7 +344,6 @@ void editarTarefa(Fila *fila, int codigo)
         case 4:
             printf("Data de inicio atual : %d/%d/%d\nDigite a nova data : ", tarefa.dataInicio.dia, tarefa.dataInicio.mes, tarefa.dataInicio.ano);
             tarefa.dataInicio = lerDataValida();
-            limparBuffer();
             aux->info = tarefa;
             imprimirTarefa(tarefa);
 
@@ -348,7 +352,6 @@ void editarTarefa(Fila *fila, int codigo)
         case 5:
             printf("Data de Termino atual : %d/%d/%d\nDigite a nova data : ", tarefa.dataTermino.dia, tarefa.dataTermino.mes, tarefa.dataTermino.ano);
             tarefa.dataTermino = lerDataValida();
-            limparBuffer();
             aux->info = tarefa;
             imprimirTarefa(tarefa);
 
@@ -395,30 +398,31 @@ Tarefa concluirTarefa(Fila *fila, int codigo)
         Tarefa tarefa = aux->info;
         imprimirTarefa(tarefa);
 
-        printf("Deseja marcar como concluida? (s/n):");
+        printf("Deseja marcar como concluida? (s/n):\n");
         opcao = validarOpcao();
+        limparTela();
 
         if (opcao == 's')
         {
             do
             {
-                printf("Para finalizar, define a data de conclusão em umas das opções abaixo:\n1 - Data de hoje (%d/%d/%d)\n2 - Inserir uma data de conclusão diferente\n Sua escolha 1 ou 2 : \n", data.dia, data.mes, data.ano);
+                printf("Para finalizar, define a data de conclusão em umas das opções abaixo:\n1 - Data de hoje (%d/%d/%d)\n2 - Inserir uma data de conclusão diferente\nSua escolha 1 ou 2 : \n", data.dia, data.mes, data.ano);
                 scanf("%d", &opcao2);
                 limparBuffer();
                 limparTela();
                 if (opcao2 == 1)
                 {
+                    tarefa.status = compararData(data, tarefa.dataTermino);
                     tarefa.dataTermino = data;
-                    tarefa.status = compararData(tarefa.dataInicio, tarefa.dataTermino);
                     if (tarefa.status == 0)
                     { // se a tarefa foi finalizada sem esta atrasada ela recebe o status de em dia
-                        printf("PARABÉNS pela dedicação, a tarefa foi entregue sem atrasos.\n ");
+                        printf("PARABÉNS pela dedicação, a tarefa foi entregue sem atrasos.\n");
                         retiraFila(fila, codigo);
                         return tarefa;
                     }
-                    else
+                    else if(tarefa.status==1)
                     {
-                        printf("Tarefa concluída com atraso, obrigado pelo empenho");
+                        printf("Tarefa concluída com atraso, obrigado pelo empenho\n");
                         retiraFila(fila, codigo);
                         return tarefa;
                     }
@@ -427,17 +431,18 @@ Tarefa concluirTarefa(Fila *fila, int codigo)
                 {
                     limparTela();
                     printf("Digite a Data de termino da Tarefa neste formato dd/mm/aaaa: \n");
-                    tarefa.dataTermino = lerDataValida();
-                    tarefa.status = compararData(tarefa.dataInicio, tarefa.dataTermino);
+                    data = lerDataValida();
+                    tarefa.status = compararData(data, tarefa.dataTermino);
+                    tarefa.dataTermino = data;
                     if (tarefa.status == 0)
                     { // se a tarefa foi finalizada sem esta atrasada ela recebe o status de em dia
-                        printf("PARABÉNS pela dedicação, a tarefa foi entregue sem atrasos.\n ");
+                        printf("PARABÉNS pela dedicação, a tarefa foi entregue sem atrasos.\n");
                         retiraFila(fila, codigo);
                         return tarefa;
                     }
-                    else
+                    else if(tarefa.status==1)
                     {
-                        printf("Tarefa concluída com atraso, obrigado pelo empenho");
+                        printf("Tarefa concluída com atraso, obrigado pelo empenho\n");
                         retiraFila(fila, codigo);
                         return tarefa;
                     }
@@ -536,33 +541,34 @@ int percorrerLista(Fila *fila, int codigo)
 
     if (aux->info.codigo == codigo)
     {
-        return 0;
+        return 1;
     }
     else
     {
         printf("A tarefa com o código informado NÃO FOI ENCONTRADA.\n");
         voltaMenu();
-        return 1;
+        return 0;
     }
 }
 
-void inserirLista(No *lista,Tarefa tarefa){
+ No *inserirLista(No *lista,Tarefa tarefa){
     int aux;
     No *novo =(No*)malloc(sizeof(No));
     No *auxLista;
     novo->info = tarefa;
+    novo->prox = NULL;
+    auxLista = lista;
 
     if(lista==NULL){
         lista = novo;
         novo->prox = NULL;
-        return;
+        return lista;
     }
     else if(lista->prox==NULL){
         lista->prox= novo;
         novo->prox = NULL;
-        return;
-    }
-    else{
+        return lista;
+    } else {
         auxLista= lista;
         do
         {
@@ -572,10 +578,25 @@ void inserirLista(No *lista,Tarefa tarefa){
         } while (aux!=1 && auxLista->prox!=NULL);
         novo->prox = auxLista;
         auxLista->prox = novo;
+        return lista;
     }
 
 }
 
+void imprimirLista (No* p)
+{
+    if(p==NULL)
+    {
+        printf("\n\n\t\t => LISTA VAZIA  <==\n\n ");
+    }
+    else
+    {
+        for (p ; p != NULL; p = p->prox){
+            imprimirTarefa(p->info);
+            printf("\n\n");
+        }
+    }
+}
 // função de menu e texto
 
 int menu()
@@ -723,7 +744,7 @@ void limparBuffer()
 }
 void pausaEnter() {
 
-    printf("Pressione ENTER para continuar...");
+    printf("Pressione ENTER para continuar...\n");
 
     int ch = getchar();
     while(ch != '\n' && ch != EOF) {
