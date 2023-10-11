@@ -144,20 +144,10 @@ int main()
             voltaMenu();
 
             break;
-        case 6:  
-            imprimirLista(listaConcluida);
+        case 6: 
 
-            No *current = listaConcluida;
 
-  while(current != NULL) {
-
-    // Imprime o endereço do próximo nó
-    printf("Endereço do próximo nó: %p\n", current->prox); 
-
-    current = current->prox;
-  }
-  
-
+            imprimirLista(listaConcluida);  
             voltaMenu();
 
             break;
@@ -569,54 +559,52 @@ int percorrerLista(Fila *fila, int codigo)
     No *novo =(No*)malloc(sizeof(No));
     No *auxLista,*listaAnterior;
     novo->info = tarefa;
+    novo->prox=NULL;
     auxLista = lista;
-    listaAnterior = lista;
+    listaAnterior = NULL;
+
 
     if(lista==NULL){
-        lista = novo;
-        novo->prox = NULL;
-        return lista;
+        
+        return novo;
     }
+
+    aux = compararData(novo->info.dataTermino,lista->info.dataTermino);
     if(lista->prox==NULL){
-        aux = compararData(novo->info.dataTermino,lista->info.dataTermino);
         if(aux == 1){
-            lista ->prox = NULL;
             novo->prox = lista;
             return novo;
         }
-        else{
+        else {
             lista -> prox = novo;
-            novo ->  prox = NULL; 
-
             return lista;   
             }   } 
+
+
         else {
-        listaAnterior = lista;
 
-
-        aux = compararData(tarefa.dataTermino,auxLista->info.dataTermino);
-        if (aux = 1){
+        if (aux == 1){
             novo -> prox = lista;
             lista = novo;
             return lista;
         }
-        while (aux!=1 && auxLista!=NULL){
-            if(auxLista->prox==NULL){
-                novo->prox = NULL;
-                auxLista->prox = novo;
-                return lista;
-            }
+
+
+        while (auxLista!=NULL && aux!=1 ){
             listaAnterior = auxLista;
             auxLista = auxLista->prox;
             aux = compararData(novo->info.dataTermino,auxLista->info.dataTermino);
             if(aux==1){
-             listaAnterior->prox = novo;
+                listaAnterior->prox = novo;
                 novo->prox = auxLista;
                 return lista;
             }
+            if (auxLista->prox==NULL){
+            auxLista->prox = novo;
+            return lista;
             }
-            listaAnterior->prox = novo;
-            novo->prox = auxLista;
+            }
+            auxLista->prox = novo;
             return lista;
     }
 
