@@ -136,7 +136,6 @@ int main()
             if (opcao == 1)
             {
                 tarefa = concluirTarefa(filaTarefas, codigo);
-                pausaEnter();
                 listaConcluida=inserirLista(listaConcluida,tarefa);
                 
             }
@@ -148,6 +147,22 @@ int main()
             }
             break;
         case 4:
+            opcao = percorrerLista(filaTarefas, codigo);
+            if (listaPendente==NULL){listaVazia();break;} 
+            codigo = lerCodigo();
+            if (opcao == 1)
+            {
+                
+                listaConcluida=inserirLista(listaConcluida,tarefa);
+                
+            }
+            else if (opcao == 0)
+            {
+                printf("A tarefa com o código informado NÃO FOI ENCONTRADA.\n");
+                voltaMenu();
+                break;
+            }
+            
             pausaEnter();
             voltaMenu();
             break;
@@ -181,6 +196,7 @@ Tarefa criarTarefa()
 {
     Tarefa nova;
     char resp,resp2;
+    int codigo;
     nova.codigo = lerCodigo();
     limparTela();
 
@@ -192,13 +208,23 @@ Tarefa criarTarefa()
     printf("Digite o nome do Projeto use no maximo 30 caracteres : \n");
     leituraString(nova.projeto);
     limparTela();
+    codigo = compararData(nova.dataInicio,nova.dataTermino);
 
-    printf("Digite a data de inicio da Tarefa neste formato dd/mm/aaaa :\n");
-    nova.dataInicio = lerDataValida();
-    limparTela();
+    do{
+        printf("Digite a data de inicio da Tarefa neste formato dd/mm/aaaa :\n");
+        nova.dataInicio = lerDataValida();
+        limparTela();
 
-    printf("Digite a data de termino da tarefa neste formato dd/mm/aaaa: \n");
-    nova.dataTermino = lerDataValida();
+        printf("Digite a data de termino da tarefa neste formato dd/mm/aaaa: \n");
+        nova.dataTermino = lerDataValida();
+        codigo = compararData(nova.dataInicio,nova.dataTermino);
+        if(codigo ==1){
+            limparTela();
+            printf("A data de Inicio nao pode ser maior que a data de Termino!!!\n");
+            pausaEnter();
+            limparTela();
+            }
+       } while(codigo==1);
     limparTela();
     printf("Esta tarefa está pendente? (s/n): ");
     resp2 = validarOpcao();
@@ -819,9 +845,8 @@ char validarOpcao() {
     char opcao;
 
     do {
-        opcao = getchar();
+        opcao = tolower(getchar());
         limparBuffer(); 
-        tolower(opcao); 
     if(opcao != 's' && opcao != 'n') {
         printf("Opção inválida. Digite apenas s ou n.\n");
     }
