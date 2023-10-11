@@ -21,11 +21,11 @@ Lista* insere (Lista* recebida, int valor)
     Lista  *novo ;
     novo= (Lista*) malloc(sizeof(Lista));
     novo->info = valor;
-    novo->prox = recebida;
+    novo-> prox = recebida;
     return novo;
 }
 
-/* função vazia: retorna 1 se vazia ou 0 se não vazia */
+/* funï¿½ï¿½o vazia: retorna 1 se vazia ou 0 se nï¿½o vazia */
 int vazia (Lista *recebida)
 {
 	if (recebida == NULL)
@@ -87,7 +87,7 @@ Lista* UNIAO(Lista **UM, Lista **DOIS)
 
         aux=aux2;
         aux2=aux2->prox;
-        if(flag==1) //elemento não é repetido
+        if(flag==1) //elemento nï¿½o ï¿½ repetido
         {
             aux->prox=TRES;
             TRES= aux;
@@ -116,7 +116,7 @@ int main()
         printf("\n\t\tDigite o elemento a ser inserido na lista: ");
         scanf("%d",&num);
         Inicio=insere(Inicio,num);
-        printf("\n\t\t\t =>> Deseja inserir mais um número? (S/N)");
+        printf("\n\t\t\t =>> Deseja inserir mais um nï¿½mero? (S/N)");
         fflush(stdin);
         resp=getchar();
     } while(toupper(resp)=='S');
@@ -127,7 +127,7 @@ int main()
         printf("\n\t\tDigite o elemento a ser inserido na lista 1: ");
         scanf("%d",&num);
         L1=insere(L1,num);
-        printf("\n\t\t\t =>> Deseja inserir mais um número? (S/N)");
+        printf("\n\t\t\t =>> Deseja inserir mais um nï¿½mero? (S/N)");
         fflush(stdin);
         resp=getchar();
     } while(toupper(resp)!='N');
@@ -139,7 +139,7 @@ int main()
         printf("\n\t\tDigite o elemento a ser inserido na lista 2: ");
         scanf("%d",&num);
         L2=insere(L2,num);
-        printf("\n\t\t\t =>> Deseja inserir mais um número? (S/N)");
+        printf("\n\t\t\t =>> Deseja inserir mais um nï¿½mero? (S/N)");
         fflush(stdin);
         resp=getchar();
     } while(toupper(resp)!='N');

@@ -84,6 +84,7 @@ int main()
     Tarefa tarefa;
     Fila *filaTarefas = criaFila();
     No *listaConcluida = NULL;
+    No *aux;
     
     do
     {
@@ -156,7 +157,7 @@ int main()
 
   tarefa1.dataTermino.dia = 20; 
   tarefa1.dataTermino.mes = 10;
-  tarefa1.dataTermino.ano = 2023;
+  tarefa1.dataTermino.ano = 2032;
 
   tarefa1.status = 1;
 
@@ -167,11 +168,11 @@ int main()
 
   tarefa2.dataInicio.dia = 22;
   tarefa2.dataInicio.mes = 10;
-  tarefa2.dataInicio.ano = 2023;
+  tarefa2.dataInicio.ano = 2028;
 
   tarefa2.dataTermino.dia = 27;
   tarefa2.dataTermino.mes = 10; 
-  tarefa2.dataTermino.ano = 2023;
+  tarefa2.dataTermino.ano = 2060;
 
   tarefa2.status = 0;
 
@@ -201,10 +202,10 @@ int main()
   tarefa3.dataTermino.ano = 2023;
 
   tarefa3.status = 2;
-            listaConcluida=inserirLista(listaConcluida,tarefa1);
-            listaConcluida=inserirLista(listaConcluida,tarefa2);
-            listaConcluida=inserirLista(listaConcluida,tarefa3);
-            listaConcluida=inserirLista(listaConcluida,tarefa4);
+           //listaConcluida=inserirLista(listaConcluida,tarefa1);
+            //listaConcluida=inserirLista(listaConcluida,tarefa2); 
+            //listaConcluida=inserirLista(listaConcluida,tarefa3); 
+            //listaConcluida=inserirLista(listaConcluida,tarefa4); 
 
 
 
@@ -628,17 +629,25 @@ int percorrerLista(Fila *fila, int codigo)
         novo->prox = NULL;
         return lista;
     }
-    else if(lista->prox==NULL){
+    if(lista->prox==NULL){
         aux = compararData(novo->info.dataTermino,lista->info.dataTermino);
-        if(aux = 1){
+        if(aux == 1){
             lista ->prox = NULL;
+            printf("chegou aqui");
             novo->prox = lista;
-            lista = novo;
-            return lista;
-
+            return novo;
         }
-    } else {
+        else{
+            lista -> prox = novo;
+            novo ->  prox = NULL; 
+            printf("chegou aqui222");
+
+            return lista;   
+            }   } 
+        else {
         listaAnterior = lista;
+
+
         aux = compararData(tarefa.dataTermino,auxLista->info.dataTermino);
         while (aux!=1 && auxLista!=NULL){
             if(auxLista->prox==NULL){
