@@ -143,7 +143,7 @@ int main()
             voltaMenu();
 
             break;
-        case 6:  Tarefa tarefa1, tarefa2, tarefa3;
+        case 6:  Tarefa tarefa1, tarefa2, tarefa3,tarefa4;
 
   //Preenche tarefa 1
   tarefa1.codigo = 1;
@@ -188,10 +188,23 @@ int main()
   tarefa3.dataTermino.mes = 11;
   tarefa3.dataTermino.ano = 2023;
 
-  tarefa3.status = 2;
+    tarefa4.codigo = 4;
+  strcpy(tarefa3.tarefa, "Colocar azulejos");
+  strcpy(tarefa3.projeto, "Casa");
 
+  tarefa3.dataInicio.dia = 5;
+  tarefa3.dataInicio.mes = 10;
+  tarefa3.dataInicio.ano = 2023;
+
+  tarefa3.dataTermino.dia = 5;
+  tarefa3.dataTermino.mes = 11;
+  tarefa3.dataTermino.ano = 2023;
+
+  tarefa3.status = 2;
+            listaConcluida=inserirLista(listaConcluida,tarefa1);
             listaConcluida=inserirLista(listaConcluida,tarefa2);
             listaConcluida=inserirLista(listaConcluida,tarefa3);
+            listaConcluida=inserirLista(listaConcluida,tarefa4);
 
 
 
@@ -631,16 +644,17 @@ int percorrerLista(Fila *fila, int codigo)
             if(auxLista->prox==NULL){
                 novo->prox = NULL;
                 auxLista->prox = novo;
+                return lista;
             }
             listaAnterior = auxLista;
             auxLista = auxLista->prox;
-            compararData(novo->info.dataTermino,auxLista->info.dataTermino);
+            aux = compararData(novo->info.dataTermino,auxLista->info.dataTermino);
             }
             listaAnterior->prox = novo;
             novo->prox = auxLista;
-
-        return lista;
+            return lista;
     }
+
 
 
 }
