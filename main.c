@@ -65,6 +65,7 @@ Tarefa concluirTarefa(Fila *fila, int codigo);
 void editarTarefa(Fila *inicio, int codigo);
 Data lerDataValida();
 int compararData(Data dataInicio, Data dataTermino);
+void imprimirAtrasada(No *lista);
 
 // Protótipos das Funções auxiliares
 void limparTela();
@@ -145,17 +146,15 @@ int main()
 
             break;
         case 6: 
-
-
+            printf("Lista de tarefas concluidas : ");
             imprimirLista(listaConcluida);  
             voltaMenu();
 
             break;
         case 7:
-            mensagemFinal();
-            return 0;
 
             return 0;
+
             break;
         }
 
@@ -463,6 +462,29 @@ Tarefa concluirTarefa(Fila *fila, int codigo)
     }
 }
 
+void imprimirAtrasada(No *lista){
+
+  No* aux = lista;
+
+  while(aux != NULL && aux->info.status == 1) {
+
+    imprimirTarefa(aux->info); 
+    printf("\n");
+    
+    aux = aux->prox;
+  }
+
+  while(aux != NULL) {
+
+    imprimirTarefa(aux->info);
+    printf("\n");
+    
+    aux = aux->prox; 
+  }
+    
+}
+
+
 // Funções da fila
 
 Fila *criaFila()
@@ -554,7 +576,7 @@ int percorrerLista(Fila *fila, int codigo)
     }
 }
 
- No *inserirLista(No *lista,Tarefa tarefa){
+No *inserirLista(No *lista,Tarefa tarefa){
     int aux;
     No *novo =(No*)malloc(sizeof(No));
     No *auxLista,*listaAnterior;
