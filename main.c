@@ -75,6 +75,7 @@ int lerCodigo();
 void dataAtual(Data *data);
 void pausaEnter();
 char validarOpcao();
+void listaVazia();
 
 
 int main()
@@ -85,6 +86,7 @@ int main()
     Tarefa tarefa;
     Fila *filaTarefas = criaFila();
     No *listaConcluida = NULL;
+    No *listaPendente = NULL;
     No *aux;
     
     do
@@ -95,14 +97,23 @@ int main()
         case 1:
             tarefa = criarTarefa();
             imprimirTarefa(tarefa);
-            if (tarefa.status == 3)
+
+            if (tarefa.status == 3) // se a tarefa retorna com o status 3 quer dizer que falho na criação da mesma
             {
                 limparTela();
                 break;
             }
+            else if(tarefa.status==-1){
+               listaPendente = inserirLista(listaPendente,tarefa);
+               limparTela();
+               voltaMenu();
+               break;
+            }       
+            else{
             inserirFila(filaTarefas, tarefa);
+            limparTela();
             voltaMenu();
-
+            }
             break;
         case 2:
 
@@ -141,29 +152,19 @@ int main()
             voltaMenu();
             break;
         case 5:
-
+            if (listaPendente==NULL){listaVazia();break;}  
+            imprimirLista(listaPendente);
             voltaMenu();
-
             break;
         case 6: 
-            if (listaConcluida==NULL){
-                limparTela();
-                Printf("\nLista Vazia!! \n");
-                voltaMenu();
-                break;
-            }
+            if (listaConcluida==NULL){listaVazia();break;}
             printf("\t\t\nLista de tarefas concluidas :\t\t\n ");
             imprimirLista(listaConcluida);  
             voltaMenu();
 
             break;
         case 7: 
-                if (listaConcluida==NULL){
-                limparTela();
-                Printf("\nLista Vazia!! \n");
-                voltaMenu();
-                break;
-            }
+            if (listaConcluida==NULL){listaVazia();break;}
             imprimirAtrasada(listaConcluida);
             voltaMenu();
             break;
@@ -179,7 +180,7 @@ int main()
 Tarefa criarTarefa()
 {
     Tarefa nova;
-    char resp;
+    char resp,resp2;
     nova.codigo = lerCodigo();
     limparTela();
 
@@ -199,33 +200,32 @@ Tarefa criarTarefa()
     printf("Digite a data de termino da tarefa neste formato dd/mm/aaaa: \n");
     nova.dataTermino = lerDataValida();
     limparTela();
-    nova.status = compararData(nova.dataInicio, nova.dataTermino);
+    printf("Esta tarefa está pendente? (s/n): ");
+    resp2 = validarOpcao();
+    if(resp2=='s'){
+        limparTela();
+        printf("Tarefa marcada como pendente.\n");
+        nova.status= -1;
+    }
+    else if(resp2=='n'){
+        nova.status = 0;
+    }
     imprimirTarefa(nova);
     printf("Antes de finalizar, certifique-se de que todos os campos estão preenchidos como deseja.\n");
 
     printf("Para SALVAR a tarefa, digite 'S'. Para DESCARTAR, digite 'N'\n");
-    do
-    {
-        resp = tolower(getchar());
-        limparBuffer();
-
-        if (resp != 's' && resp != 'n')
-        {
-            printf("RESPOSTA INVALIDA! Lembre-se de digitar s para confirmar, n para descartar a tarefa!\n ");
-
-            continue;
-        }
-        else if (resp == 'n')
+    resp = validarOpcao();
+         if (resp == 'n')
         {
             printf("Vamos voltar ao menu principal.\n");
             nova.status = 3;
             pausaEnter();
             return nova;
         }
-    } while (resp != 's');
 
     limparTela();
     printf("Parabéns, a tarefa foi adicionada com sucesso! \n\n");
+
 
     return nova;
 }
@@ -829,4 +829,9 @@ char validarOpcao() {
   } while(opcao != 's' && opcao != 'n');
     return opcao;
 
+}
+void listaVazia(){
+    limparTela();
+    printf("\nLista Vazia!! \n");
+    voltaMenu();
 }
