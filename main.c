@@ -146,15 +146,26 @@ int main()
 
             break;
         case 6: 
-            printf("Lista de tarefas concluidas : ");
+            if (listaConcluida==NULL){
+                limparTela();
+                Printf("\nLista Vazia!! \n");
+                voltaMenu();
+                break;
+            }
+            printf("\t\t\nLista de tarefas concluidas :\t\t\n ");
             imprimirLista(listaConcluida);  
             voltaMenu();
 
             break;
-        case 7:
-
-            return 0;
-
+        case 7: 
+                if (listaConcluida==NULL){
+                limparTela();
+                Printf("\nLista Vazia!! \n");
+                voltaMenu();
+                break;
+            }
+            imprimirAtrasada(listaConcluida);
+            voltaMenu();
             break;
         }
 
@@ -463,26 +474,28 @@ Tarefa concluirTarefa(Fila *fila, int codigo)
 }
 
 void imprimirAtrasada(No *lista){
+    No *listaux1 = lista;
+    No *listaux2 = lista;
+    printf("\t\tTAREFAS CONCLUIDAS SEM ATRASO:\t\t\n\n");
+    while(listaux1 != NULL){
+        if(listaux1->info.status == 0){
+            imprimirTarefa(listaux1->info);
+            printf("\n\n");
+        }
+        listaux1 = listaux1->prox;
+    }
+    printf("\t\tTAREFAS CONCLUIDAS COM ATRASO:\t\t\n\n");
+    while(listaux2 != NULL){
+        if(listaux2->info.status == 1){
+            imprimirTarefa(listaux2->info);
+                        printf("\n\n");
 
-  No* aux = lista;
-
-  while(aux != NULL && aux->info.status == 1) {
-
-    imprimirTarefa(aux->info); 
-    printf("\n");
-    
-    aux = aux->prox;
-  }
-
-  while(aux != NULL) {
-
-    imprimirTarefa(aux->info);
-    printf("\n");
-    
-    aux = aux->prox; 
-  }
-    
+        }
+        listaux2 = listaux2->prox;
+    }
 }
+    
+
 
 
 // Funções da fila
@@ -640,7 +653,7 @@ void imprimirLista(No* p) {
 
   while(aux != NULL) {
     imprimirTarefa(aux->info);
-    printf("\n");
+    printf("\n\n");
     aux = aux->prox;
   }
 
