@@ -144,72 +144,20 @@ int main()
             voltaMenu();
 
             break;
-        case 6:  Tarefa tarefa1, tarefa2, tarefa3,tarefa4;
-
-  //Preenche tarefa 1
-  tarefa1.codigo = 1;
-  strcpy(tarefa1.tarefa, "Comprar material");
-  strcpy(tarefa1.projeto, "Casa");
-
-  tarefa1.dataInicio.dia = 15;
-  tarefa1.dataInicio.mes = 10;
-  tarefa1.dataInicio.ano = 2023;
-
-  tarefa1.dataTermino.dia = 20; 
-  tarefa1.dataTermino.mes = 10;
-  tarefa1.dataTermino.ano = 2032;
-
-  tarefa1.status = 1;
-
-  //Preenche tarefa 2
-  tarefa2.codigo = 2;
-  strcpy(tarefa2.tarefa, "Pintar paredes");
-  strcpy(tarefa2.projeto, "Casa");
-
-  tarefa2.dataInicio.dia = 22;
-  tarefa2.dataInicio.mes = 10;
-  tarefa2.dataInicio.ano = 2028;
-
-  tarefa2.dataTermino.dia = 27;
-  tarefa2.dataTermino.mes = 10; 
-  tarefa2.dataTermino.ano = 2060;
-
-  tarefa2.status = 0;
-
-  //Preenche tarefa 3
-  tarefa3.codigo = 3;
-  strcpy(tarefa3.tarefa, "Colocar azulejos");
-  strcpy(tarefa3.projeto, "Casa");
-
-  tarefa3.dataInicio.dia = 29;
-  tarefa3.dataInicio.mes = 10;
-  tarefa3.dataInicio.ano = 2023;
-
-  tarefa3.dataTermino.dia = 3;
-  tarefa3.dataTermino.mes = 11;
-  tarefa3.dataTermino.ano = 2023;
-
-    tarefa4.codigo = 4;
-  strcpy(tarefa3.tarefa, "Colocar azulejos");
-  strcpy(tarefa3.projeto, "Casa");
-
-  tarefa3.dataInicio.dia = 5;
-  tarefa3.dataInicio.mes = 10;
-  tarefa3.dataInicio.ano = 2023;
-
-  tarefa3.dataTermino.dia = 5;
-  tarefa3.dataTermino.mes = 11;
-  tarefa3.dataTermino.ano = 2023;
-
-  tarefa3.status = 2;
-           //listaConcluida=inserirLista(listaConcluida,tarefa1);
-            //listaConcluida=inserirLista(listaConcluida,tarefa2); 
-            //listaConcluida=inserirLista(listaConcluida,tarefa3); 
-            //listaConcluida=inserirLista(listaConcluida,tarefa4); 
-
-
-
+        case 6:  
             imprimirLista(listaConcluida);
+
+            No *current = listaConcluida;
+
+  while(current != NULL) {
+
+    // Imprime o endereço do próximo nó
+    printf("Endereço do próximo nó: %p\n", current->prox); 
+
+    current = current->prox;
+  }
+  
+
             voltaMenu();
 
             break;
@@ -633,14 +581,12 @@ int percorrerLista(Fila *fila, int codigo)
         aux = compararData(novo->info.dataTermino,lista->info.dataTermino);
         if(aux == 1){
             lista ->prox = NULL;
-            printf("chegou aqui");
             novo->prox = lista;
             return novo;
         }
         else{
             lista -> prox = novo;
             novo ->  prox = NULL; 
-            printf("chegou aqui222");
 
             return lista;   
             }   } 
@@ -649,6 +595,11 @@ int percorrerLista(Fila *fila, int codigo)
 
 
         aux = compararData(tarefa.dataTermino,auxLista->info.dataTermino);
+        if (aux = 1){
+            novo -> prox = lista;
+            lista = novo;
+            return lista;
+        }
         while (aux!=1 && auxLista!=NULL){
             if(auxLista->prox==NULL){
                 novo->prox = NULL;
@@ -658,6 +609,11 @@ int percorrerLista(Fila *fila, int codigo)
             listaAnterior = auxLista;
             auxLista = auxLista->prox;
             aux = compararData(novo->info.dataTermino,auxLista->info.dataTermino);
+            if(aux==1){
+             listaAnterior->prox = novo;
+                novo->prox = auxLista;
+                return lista;
+            }
             }
             listaAnterior->prox = novo;
             novo->prox = auxLista;
