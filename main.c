@@ -143,7 +143,58 @@ int main()
             voltaMenu();
 
             break;
-        case 6:
+        case 6:  Tarefa tarefa1, tarefa2, tarefa3;
+
+  //Preenche tarefa 1
+  tarefa1.codigo = 1;
+  strcpy(tarefa1.tarefa, "Comprar material");
+  strcpy(tarefa1.projeto, "Casa");
+
+  tarefa1.dataInicio.dia = 15;
+  tarefa1.dataInicio.mes = 10;
+  tarefa1.dataInicio.ano = 2023;
+
+  tarefa1.dataTermino.dia = 20; 
+  tarefa1.dataTermino.mes = 10;
+  tarefa1.dataTermino.ano = 2023;
+
+  tarefa1.status = 1;
+
+  //Preenche tarefa 2
+  tarefa2.codigo = 2;
+  strcpy(tarefa2.tarefa, "Pintar paredes");
+  strcpy(tarefa2.projeto, "Casa");
+
+  tarefa2.dataInicio.dia = 22;
+  tarefa2.dataInicio.mes = 10;
+  tarefa2.dataInicio.ano = 2023;
+
+  tarefa2.dataTermino.dia = 27;
+  tarefa2.dataTermino.mes = 10; 
+  tarefa2.dataTermino.ano = 2023;
+
+  tarefa2.status = 0;
+
+  //Preenche tarefa 3
+  tarefa3.codigo = 3;
+  strcpy(tarefa3.tarefa, "Colocar azulejos");
+  strcpy(tarefa3.projeto, "Casa");
+
+  tarefa3.dataInicio.dia = 29;
+  tarefa3.dataInicio.mes = 10;
+  tarefa3.dataInicio.ano = 2023;
+
+  tarefa3.dataTermino.dia = 3;
+  tarefa3.dataTermino.mes = 11;
+  tarefa3.dataTermino.ano = 2023;
+
+  tarefa3.status = 2;
+
+            listaConcluida=inserirLista(listaConcluida,tarefa2);
+            listaConcluida=inserirLista(listaConcluida,tarefa3);
+
+
+
             imprimirLista(listaConcluida);
             voltaMenu();
 
@@ -554,10 +605,10 @@ int percorrerLista(Fila *fila, int codigo)
  No *inserirLista(No *lista,Tarefa tarefa){
     int aux;
     No *novo =(No*)malloc(sizeof(No));
-    No *auxLista;
+    No *auxLista,*listaAnterior;
     novo->info = tarefa;
-    novo->prox = NULL;
     auxLista = lista;
+    listaAnterior = lista;
 
     if(lista==NULL){
         lista = novo;
@@ -565,38 +616,47 @@ int percorrerLista(Fila *fila, int codigo)
         return lista;
     }
     else if(lista->prox==NULL){
-        lista->prox= novo;
-        novo->prox = NULL;
-        return lista;
-    } else {
-        auxLista= lista;
-        do
-        {
-        aux = compararData(tarefa.dataTermino,auxLista->info.dataTermino);
-        auxLista = auxLista->prox;
+        aux = compararData(novo->info.dataTermino,lista->info.dataTermino);
+        if(aux = 1){
+            lista ->prox = NULL;
+            novo->prox = lista;
+            lista = novo;
+            return lista;
 
-        } while (aux!=1 && auxLista->prox!=NULL);
-        novo->prox = auxLista;
-        auxLista->prox = novo;
-        return lista;
-    }
-
-}
-
-void imprimirLista (No* p)
-{
-    if(p==NULL)
-    {
-        printf("\n\n\t\t => LISTA VAZIA  <==\n\n ");
-    }
-    else
-    {
-        for (p ; p != NULL; p = p->prox){
-            imprimirTarefa(p->info);
-            printf("\n\n");
         }
+    } else {
+        listaAnterior = lista;
+        aux = compararData(tarefa.dataTermino,auxLista->info.dataTermino);
+        while (aux!=1 && auxLista!=NULL){
+            if(auxLista->prox==NULL){
+                novo->prox = NULL;
+                auxLista->prox = novo;
+            }
+            listaAnterior = auxLista;
+            auxLista = auxLista->prox;
+            compararData(novo->info.dataTermino,auxLista->info.dataTermino);
+            }
+            listaAnterior->prox = novo;
+            novo->prox = auxLista;
+
+        return lista;
     }
+
+
 }
+
+void imprimirLista(No* p) {
+
+  No* aux = p;
+
+  while(aux != NULL) {
+    imprimirTarefa(aux->info);
+    printf("\n");
+    aux = aux->prox;
+  }
+
+}
+
 // função de menu e texto
 
 int menu()
