@@ -25,6 +25,7 @@ struct Tarefa
     Data dataInicio;
     Data dataTermino;
     int status;
+    int prioridade;
 };
 typedef struct Tarefa Tarefa;
 
@@ -64,7 +65,7 @@ No* retiraLista(No *listaPendente, int codigo);
 Tarefa criarTarefa();
 void imprimirTarefa(Tarefa nova);
 Tarefa concluirTarefa(Fila *fila, int codigo);
-void editarTarefa(Fila *inicio, int codigo);
+void editarTarefa(Fila *fila, int codigo,Fila *filaAlta,Fila *filaMedia,Fila *filaBaixa);
 Data lerDataValida();
 int compararData(Data dataInicio, Data dataTermino);
 void imprimirAtrasada(No *lista);
@@ -81,7 +82,7 @@ void pausaEnter();
 char validarOpcao();
 void listaVazia();
 int case4();
-
+int validarPrioridade();
 
 int main()
 {
@@ -90,8 +91,16 @@ int main()
     int codigo,codigo2;
     Tarefa tarefa;
     Fila *filaTarefas = criaFila();
+    Fila *filaAlta = criaFila();
+    Fila *filaMedia = criaFila();
+    Fila *filaBaixa = criaFila();
+
     No *listaConcluida = NULL;
     No *listaPendente = NULL;
+    No *listaPendenteAlta = NULL;
+    No *listaPendenteMedia = NULL;
+    No *listaPendenteBaixa = NULL;
+
     No *aux;
     
     do
@@ -103,20 +112,43 @@ int main()
             tarefa = criarTarefa();
             imprimirTarefa(tarefa);
 
-            if (tarefa.status == 3) // se a tarefa retorna com o status 3 quer dizer que falho na criação da mesma
+            if (tarefa.status == 3) // se a tarefa retorna com o status 3 quer dizer que falhou na criação da mesma
             {
                 limparTela();
                 break;
             }
             else if(tarefa.status==-1){
                listaPendente = inserirLista(listaPendente,tarefa);
+                if (tarefa.prioridade==1){
+                    listaPendenteAlta = inserirLista(listaPendenteAlta,tarefa);
+                }
+                else if ( tarefa.prioridade==2){
+                    listaPendenteMedia = inserirLista(listaPendenteMedia,tarefa);
+                }
+                else {
+                    listaPendenteBaixa = inserirLista(listaPendenteBaixa,tarefa);
+                }
                voltaMenu();
                break;
             }       
             else{
-            inserirFila(filaTarefas, tarefa);
-            voltaMenu();
+                if (tarefa.prioridade==1){
+                    inserirFila(filaAlta,tarefa);
+                    inserirFila(filaTarefas,tarefa);
+
+
+                }
+                else if ( tarefa.prioridade==2){
+                    inserirFila(filaMedia,tarefa);
+                    inserirFila(filaTarefas,tarefa);
+            
+                }
+                else {
+                    inserirFila(filaBaixa,tarefa);
+                    inserirFila(filaTarefas,tarefa);
+                }
             }
+            voltaMenu();
             break;
         case 2: // editar a tarefa
 
@@ -124,7 +156,8 @@ int main()
             limparTela();
             printf("Por gentileza digita o codigo da tarefa a ser editada :\n");
             codigo = lerCodigo();
-            editarTarefa(filaTarefas, codigo);
+            editarTarefa(filaTarefas, codigo,filaAlta,filaBaixa,filaMedia);
+            
 
             break;
 
@@ -140,6 +173,15 @@ int main()
             {
                 tarefa = concluirTarefa(filaTarefas, codigo);
                 listaConcluida=inserirLista(listaConcluida,tarefa);
+                if(tarefa.prioridade==1){
+                    listaPendenteAlta= inserirLista(listaPendenteAlta,tarefa);
+                }
+                else if(tarefa.prioridade==2){
+                     listaPendenteMedia= inserirLista(listaPendenteMedia,tarefa);
+                }
+                else{
+                     listaPendenteBaixa= inserirLista(listaPendenteBaixa,tarefa);
+                }
                 
             }
             else if (opcao == 0)
@@ -149,16 +191,15 @@ int main()
                 break;
             }
             break;
-        case 4: //
+        case 4: // atualizacao de status da tarefa
 
             opcao = case4();  // menu do atualizar status praticamente retorna :  1 - tirar pendencia , 2 - inserir  pendencia  3 - sair
             
-            if(opcao == 3){
+            if(opcao == 3){  // volta para o menu
                 break;
             }
             else if (opcao == 1){
                 if (listaPendente==NULL){listaVazia();break;} 
-                imprimirLista(listaPendente);
                 codigo = lerCodigo  ();
                 opcao2 = percorrerLista(listaPendente, codigo);
                 if (opcao2 == 1)
@@ -166,7 +207,24 @@ int main()
                     limparTela();
                     tarefa = pegarlista(listaPendente,codigo);
                     listaPendente = retiraLista(listaPendente,codigo);
+
+                    if(tarefa.prioridade==1){
+                        listaPendenteAlta= retiraLista(listaPendenteAlta,codigo);
+                        inserirFila(filaAlta,tarefa);
+
+                    }
+                    else if(tarefa.prioridade==2){
+                        listaPendenteMedia= inserirLista(listaPendenteMedia,tarefa);
+                        inserirFila(filaMedia,tarefa);
+
+                    }
+                    else{
+                        listaPendenteBaixa= inserirLista(listaPendenteBaixa,tarefa);
+                        inserirFila(filaBaixa,tarefa);
+
+                    }
                     inserirFila(filaTarefas,tarefa);
+                    
                     limparTela();
                     printf("Pendencia removida com sucesso!\n");
                     voltaMenu();
@@ -189,8 +247,24 @@ int main()
                     limparTela();
                     tarefa = pegarFila(filaTarefas,codigo);
                     tarefa.status = -1;
-                    retiraFila(filaTarefas,codigo);
-                    listaPendente = inserirLista(listaPendente,tarefa);
+
+                    if(tarefa.prioridade==1){
+                        retiraFila(filaAlta,codigo);
+                        listaPendenteAlta = inserirLista(listaPendenteAlta,tarefa);
+
+                    }
+                    else if(tarefa.prioridade==2){
+                        retiraFila(filaMedia,codigo);
+                        listaPendenteMedia = inserirLista(listaPendenteMedia,tarefa);
+
+                    }
+                    else{
+                        retiraFila(filaBaixa,codigo);
+                        listaPendenteBaixa = inserirLista(listaPendenteBaixa,tarefa);
+
+                    }
+                        retiraFila(filaTarefas,codigo);
+                        listaPendente = inserirLista(listaPendente,tarefa);
                     break;
                 }
 
@@ -206,28 +280,42 @@ int main()
             pausaEnter();
             voltaMenu();
             break;
-        case 5:
+        case 5: // imprimir lista de tarefas pendentes
             if (listaPendente==NULL){listaVazia();break;}  
-            imprimirLista(listaPendente);
+            
+            if(listaPendenteAlta!=NULL){
+                printf("\t\t\nLista de Prioridade Alta :\t\t\n");
+                imprimirLista(listaPendenteAlta);
+            }
+            if(listaPendenteMedia!=NULL){
+                printf("\t\t\nLista de Prioridade Media :\t\t\n");
+                imprimirLista(listaPendenteMedia);
+            }
+            if(listaPendenteBaixa!=NULL){
+                printf("\t\t\nLista de Prioridade Baixa :\t\t\n");
+                imprimirLista(listaPendenteBaixa);
+            }
+
 
             voltaMenu();
             break;
-        case 6: 
+        case 6:  // imprimir lista de tarefas concluidas
             if (listaConcluida==NULL){listaVazia();break;}
             printf("\t\t\nLista de tarefas concluidas :\t\t\n");
             imprimirLista(listaConcluida);  
             voltaMenu();
 
             break;
-        case 7: 
+        case 7:  // imprimir lista de tarefas concluidas com atraso
             if (listaConcluida==NULL){listaVazia();break;}
             imprimirAtrasada(listaConcluida);
             voltaMenu();
             break;
         
-        case 8:
-                mensagemFinal();
-                return 0;
+        case 8: // fechar programa
+            
+            mensagemFinal();
+            return 0;
         break;
         }
     } while (2);
@@ -237,7 +325,7 @@ int main()
 
 // funções da Tarefa!
 
-Tarefa criarTarefa()
+Tarefa criarTarefa() // funcao para criar a tarefa 
 {
     Tarefa nova;
     char resp,resp2;
@@ -254,7 +342,6 @@ Tarefa criarTarefa()
     leituraString(nova.projeto);
     limparTela();
     codigo = compararData(nova.dataInicio,nova.dataTermino);
-
     do{
         printf("Digite a data de inicio da Tarefa neste formato dd/mm/aaaa :\n");
         nova.dataInicio = lerDataValida();
@@ -271,8 +358,11 @@ Tarefa criarTarefa()
             }
        } while(codigo==1);
     limparTela();
-    printf("Esta tarefa está pendente? (s/n): ");
+    nova.prioridade = validarPrioridade();
+    limparTela();
+    printf("Esta tarefa tem alguma pendencia? (s/n):\n");
     resp2 = validarOpcao();
+    limparTela();
     if(resp2=='s'){
         printf("Tarefa marcada como pendente.\n");
         nova.status= -1;
@@ -361,7 +451,7 @@ int compararData(Data dataInicio, Data dataTermino)
         return 0;
 }
 
-void editarTarefa(Fila *fila, int codigo)
+void editarTarefa(Fila *fila, int codigo,Fila *filaAlta,Fila *filaMedia,Fila *filaBaixa)
 {
     int opcao;
     No *aux = fila->ini;
@@ -387,7 +477,7 @@ void editarTarefa(Fila *fila, int codigo)
         printf("Tarefa encontrada!!\n\n");
         Tarefa tarefa = aux->info;
         imprimirTarefa(tarefa);
-        printf("Digite o número do campo que deseja modificar:\n1. - Codigo\n2. - Nome da Tarefa\n3. - Nome do Projeto\n4. - Data de Início\n5. - Data de Término\n\n ");
+        printf("Digite o número do campo que deseja modificar:\n1. - Codigo\n2. - Nome da Tarefa\n3. - Nome do Projeto\n4. - Data de Início\n5. - Data de Término\n6. - Prioridade\n\n");
         scanf("%d", &opcao);
         limparBuffer();
 
@@ -440,6 +530,31 @@ void editarTarefa(Fila *fila, int codigo)
             imprimirTarefa(tarefa);
 
             break;
+        
+        case 6:
+            limparTela();
+            if (tarefa.prioridade==1){
+                retiraFila(filaAlta,tarefa.codigo);
+    
+
+            }
+            else if ( tarefa.prioridade==2){
+                retiraFila(filaMedia,tarefa.codigo);
+            }
+            else {
+                retiraFila(filaBaixa,tarefa.codigo);
+                }
+            tarefa.prioridade = validarPrioridade();
+            limparTela();
+            if (tarefa.prioridade==1){
+                inserirFila(filaAlta,tarefa);
+            }
+            else if ( tarefa.prioridade==2){
+                inserirFila(filaMedia,tarefa);
+            }
+            else {
+                inserirFila(filaBaixa,tarefa);
+            }
         }
     }
     else
@@ -452,7 +567,7 @@ void editarTarefa(Fila *fila, int codigo)
 
 void imprimirTarefa(Tarefa nova)
 {
-    printf("CODIGO : %d\nNOME : %s\nPROJETO : %s\nDATA DE INICIO : %d/%d/%d\nDATA DE TERMINO : %d/%d/%d\nSTATUS : %d\n\n", nova.codigo, nova.tarefa, nova.projeto, nova.dataInicio.dia, nova.dataInicio.mes, nova.dataInicio.ano, nova.dataTermino.dia, nova.dataTermino.mes, nova.dataTermino.ano, nova.status);
+    printf("CODIGO : %d\nNOME : %s\nPROJETO : %s\nDATA DE INICIO : %d/%d/%d\nDATA DE TERMINO : %d/%d/%d\nSTATUS : %d\nPrioridade : %d\n\n", nova.codigo, nova.tarefa, nova.projeto, nova.dataInicio.dia, nova.dataInicio.mes, nova.dataInicio.ano, nova.dataTermino.dia, nova.dataTermino.mes, nova.dataTermino.ano, nova.status,nova.prioridade);
 }
 
 Tarefa concluirTarefa(Fila *fila, int codigo)
@@ -1003,7 +1118,7 @@ void listaVazia(){
 }
 int case4(){
     int opcao; 
-    printf("Escolha a opção desejada\n1 - Tirar da lista de pendência\n2 - Colocar na lista de pendência\n3 - xVoltar ao menu principal\n");
+    printf("Escolha a opção desejada\n1 - Tirar da lista de pendência\n2 - Colocar na lista de pendência\n3 - Voltar ao menu principal\n");
     do{
     scanf("%d",&opcao);
     limparBuffer();
@@ -1022,5 +1137,28 @@ int case4(){
         printf("opção invalida!! tente novamente!\n");
     }
     }while(2);
+
+}
+int validarPrioridade() {
+
+  int numero;
+
+  while(1) {
+
+    printf("Define a Prioridade da tarefa:\n1 - Alta Prioridade\n2 - Prioridade Normal\n3 - Baixa Prioridade\n"); 
+    scanf("%d", &numero);
+    limparTela();
+    limparBuffer();
+
+    if(numero < 1 || numero > 3) {
+      printf("Numero invalido, tente novamente.\n");
+      continue;
+    }
+
+    break;
+
+  }
+
+  return numero;
 
 }
