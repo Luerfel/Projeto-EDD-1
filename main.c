@@ -58,7 +58,7 @@ int percorrerLista(No *listaPendente, int codigo);
 void retiraFila(Fila *fila, int codigo);
 No *inserirLista(No *lista,Tarefa tarefa);
 void imprimirLista(No *p);
-Tarefa retiraLista(No *listaPendente, int codigo);
+No* retiraLista(No *listaPendente, int codigo);
 
 // protótipos das Funções de Tarefa
 Tarefa criarTarefa();
@@ -68,6 +68,8 @@ void editarTarefa(Fila *inicio, int codigo);
 Data lerDataValida();
 int compararData(Data dataInicio, Data dataTermino);
 void imprimirAtrasada(No *lista);
+Tarefa pegarlista(No *listaPendente,int codigo);
+Tarefa pegarFila(Fila *fila,int codigo);
 
 // Protótipos das Funções auxiliares
 void limparTela();
@@ -97,7 +99,7 @@ int main()
         opcao = menu();
         switch (opcao)
         {
-        case 1:
+        case 1: // criar uma tarefa
             tarefa = criarTarefa();
             imprimirTarefa(tarefa);
 
@@ -108,17 +110,15 @@ int main()
             }
             else if(tarefa.status==-1){
                listaPendente = inserirLista(listaPendente,tarefa);
-               limparTela();
                voltaMenu();
                break;
             }       
             else{
             inserirFila(filaTarefas, tarefa);
-            limparTela();
             voltaMenu();
             }
             break;
-        case 2:
+        case 2: // editar a tarefa
 
             if (filaTarefas->ini == NULL){filaVazia();break;}
             limparTela();
@@ -128,7 +128,7 @@ int main()
 
             break;
 
-        case 3:
+        case 3: // concluir uma tarefa
 
             limparTela();
 
@@ -149,8 +149,9 @@ int main()
                 break;
             }
             break;
-        case 4:
-            opcao = case4();  // menu do atualizar status
+        case 4: //
+
+            opcao = case4();  // menu do atualizar status praticamente retorna :  1 - tirar pendencia , 2 - inserir  pendencia  3 - sair
             
             if(opcao == 3){
                 break;
@@ -163,11 +164,34 @@ int main()
                 if (opcao2 == 1)
                 {
                     limparTela();
-                    tarefa = retiraLista(listaPendente,codigo);
-                    listaConcluida=inserirLista(listaConcluida,tarefa);
+                    tarefa = pegarlista(listaPendente,codigo);
+                    listaPendente = retiraLista(listaPendente,codigo);
+                    inserirFila(filaTarefas,tarefa);
+                    limparTela();
+                    printf("Pendencia removida com sucesso!\n");
+                    voltaMenu();
                     break;
+                }
 
-                
+                else if (opcao2 == 0)
+                {
+                    printf("A tarefa com o código informado NÃO FOI ENCONTRADA.\n");
+                    voltaMenu();
+                    break;
+                }
+            }
+            else if (opcao == 2){
+                if(filaTarefas==NULL){filaVazia();break;} // verifica se a fila de tarefal esta vazia
+                codigo = lerCodigo();
+                opcao2 = percorrerFila(filaTarefas, codigo);
+                if (opcao2 == 1)
+                {
+                    limparTela();
+                    tarefa = pegarFila(filaTarefas,codigo);
+                    tarefa.status = -1;
+                    retiraFila(filaTarefas,codigo);
+                    listaPendente = inserirLista(listaPendente,tarefa);
+                    break;
                 }
 
 
@@ -176,7 +200,8 @@ int main()
                     printf("A tarefa com o código informado NÃO FOI ENCONTRADA.\n");
                     voltaMenu();
                     break;
-                }
+                }                
+
             }
             pausaEnter();
             voltaMenu();
@@ -189,7 +214,7 @@ int main()
             break;
         case 6: 
             if (listaConcluida==NULL){listaVazia();break;}
-            printf("\t\t\nLista de tarefas concluidas :\t\t\n ");
+            printf("\t\t\nLista de tarefas concluidas :\t\t\n");
             imprimirLista(listaConcluida);  
             voltaMenu();
 
@@ -634,6 +659,7 @@ int percorrerFila(Fila *fila, int codigo)
         return 0;
     }
 }
+
 int percorrerLista(No *listaPendente, int codigo){
     int opcao;
     No *aux = listaPendente;
@@ -664,6 +690,43 @@ int percorrerLista(No *listaPendente, int codigo){
     }
 }
 
+Tarefa pegarlista(No *listaPendente,int codigo){
+
+    int opcao;
+    No *aux = listaPendente;
+    limparTela();
+
+
+    while (aux->info.codigo != codigo && aux->prox != NULL)
+    {
+        limparTela();
+
+        aux = aux->prox;
+    }
+
+    if (aux->info.codigo == codigo)
+    {
+        return aux->info;
+    }
+
+}
+
+Tarefa pegarFila(Fila *fila,int codigo){
+    int opcao;
+    No *aux = fila->ini;
+    limparTela();
+
+    while (aux->info.codigo != codigo && aux->prox != NULL)
+    {
+        aux = aux->prox;
+    }
+
+    if (aux->info.codigo == codigo)
+    {
+        return  aux->info;
+    }
+
+}
 
 No *inserirLista(No *lista,Tarefa tarefa){
     int aux;
@@ -718,9 +781,6 @@ No *inserirLista(No *lista,Tarefa tarefa){
             auxLista->prox = novo;
             return lista;
     }
-
-
-
 }
 
 void imprimirLista(No* p) {
@@ -735,7 +795,7 @@ void imprimirLista(No* p) {
 
 }
 
-Tarefa retiraLista( No *listaPendente, int codigo){
+No *retiraLista( No *listaPendente, int codigo){
     No *atual = listaPendente;
     Tarefa tarefa = atual->info;
     No *anterior = NULL;
@@ -749,23 +809,20 @@ Tarefa retiraLista( No *listaPendente, int codigo){
         if (atual->prox == NULL)
         { // se o prox do atual tbm é igual NULL então a Fila so tem ele como elemento
             tarefa = listaPendente->info;
-             free(listaPendente);
-            return tarefa;
+            listaPendente = NULL;
         }
         listaPendente = atual->prox; // o segundo elemento se torna o primeiro
-         free(atual);
-        return tarefa;
+
     }
     // remover nó no meio/fim
     else
     {
         
         anterior->prox = atual->prox;
-        free(atual);
-        return tarefa;
+
     }
     free(atual);
-    
+    return listaPendente;    
 }
 // função de menu e texto
 
@@ -946,7 +1003,7 @@ void listaVazia(){
 }
 int case4(){
     int opcao; 
-    printf("Escolha a opção desejada\n1 - tirar da lista de pendência\n2 - colocar na lista de pendência\n3 - Voltar ao menu principal\n");
+    printf("Escolha a opção desejada\n1 - Tirar da lista de pendência\n2 - Colocar na lista de pendência\n3 - xVoltar ao menu principal\n");
     do{
     scanf("%d",&opcao);
     limparBuffer();
